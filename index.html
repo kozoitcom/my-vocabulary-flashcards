@@ -90,6 +90,24 @@ if(sheetUrlEl.value)window.addEventListener('load',()=>syncGoogleSheet(true));
  const buttons=document.createElement('div');buttons.className='buttons';buttons.style.marginTop='12px';
  buttons.innerHTML='<button id="markLearned" class="primary" style="background:#138052">✓ 覚えた（出題から外す）</button><button id="restoreLearned">↩ 覚えた単語を戻す</button>';
  panel.append(buttons);
+ const manageKnown=document.createElement('div');manageKnown.style.marginTop='12px';
+ manageKnown.innerHTML='<button id="toggleKnown" type="button">📋 覚えた単語の一覧・個別に戻す</button><div id="knownList" style="display:none;margin-top:10px;max-height:260px;overflow:auto"></div>';
+ panel.append(manageKnown);
+ const knownList=manageKnown.querySelector('#knownList');
+ const toggleKnown=manageKnown.querySelector('#toggleKnown');
+ toggleKnown.onclick=()=>{knownList.style.display=knownList.style.display==='none'?'block':'none';showKnown()};
+ function showKnown(){
+  knownList.replaceChildren();
+  const entries=cards.filter(c=>learned.has(norm(c.w)));
+  if(!entries.length){knownList.textContent='覚えた単語はありません。';return}
+  for(const c of entries){
+   const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #e4eaf0';
+   const name=document.createElement('span');name.textContent=c.w;
+   const undo=document.createElement('button');undo.type='button';undo.textContent='↩ 出題に戻す';undo.style.cssText='font-size:13px;padding:8px 10px;white-space:nowrap';
+   undo.onclick=()=>{stopAuto();learned.delete(norm(c.w));persist();render();showKnown();status('「'+c.w+'」を出題対象に戻しました。')};
+   row.append(name,undo);knownList.append(row);
+  }
+ }
  const counts=document.createElement('p');counts.id='learnedStats';counts.className='tiny';counts.style.margin='10px 0 0';panel.append(counts);
  const baseRender=render;
  function rebuild(){
@@ -122,6 +140,7 @@ if(sheetUrlEl.value)window.addEventListener('load',()=>syncGoogleSheet(true));
    $('total').textContent=cards.length+'語';
   }
   stats();
+  if(knownList.style.display!=='none')showKnown();
  };
  $('markLearned').onclick=()=>{
   if(!order.length)return;
