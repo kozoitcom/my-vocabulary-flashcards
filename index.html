@@ -77,4 +77,75 @@ async function syncGoogleSheet(silent=false){
 document.getElementById('sheetSync').addEventListener('click',()=>syncGoogleSheet(false));
 document.getElementById('sheetClear').addEventListener('click',()=>{sheetUrlEl.value='';localStorage.removeItem(sheetUrlKey);sheetMsg.textContent='連携URLを解除しました。登録済みの単語は残ります。'});
 if(sheetUrlEl.value)window.addEventListener('load',()=>syncGoogleSheet(true));
+</script>
+<script>
+/* Learned words are hidden from practice only; master data stays untouched. */
+(function(){
+ const learnedKey='my_vocab_learned_words_v1';
+ let learned=new Set();
+ try{learned=new Set(JSON.parse(localStorage.getItem(learnedKey))||[])}catch{}
+ const norm=w=>String(w||'').trim().toLocaleLowerCase();
+ const persist=()=>{try{localStorage.setItem(learnedKey,JSON.stringify([...learned]))}catch{}};
+ const panel=document.querySelector('#card').parentElement;
+ const buttons=document.createElement('div');buttons.className='buttons';buttons.style.marginTop='12px';
+ buttons.innerHTML='<button id="markLearned" class="primary" style="background:#138052">✓ 覚えた（出題から外す）</button><button id="restoreLearned">↩ 覚えた単語を戻す</button>';
+ panel.append(buttons);
+ const counts=document.createElement('p');counts.id='learnedStats';counts.className='tiny';counts.style.margin='10px 0 0';panel.append(counts);
+ const baseRender=render;
+ function rebuild(){
+  const before=order[pos]===undefined?'':norm(cards[order[pos]]?.w);
+  order=order.filter(i=>cards[i]&&!learned.has(norm(cards[i].w)));
+  const allActive=cards.map((c,i)=>i).filter(i=>!learned.has(norm(cards[i].w)));
+  const present=new Set(order);
+  for(const i of allActive)if(!present.has(i))order.push(i);
+  if(before){const found=order.findIndex(i=>norm(cards[i].w)===before);if(found>=0)pos=found}
+  pos=Math.max(0,Math.min(pos,order.length-1));
+ }
+ function stats(){
+  const known=cards.filter(c=>learned.has(norm(c.w))).length;
+  counts.textContent='出題対象 '+order.length+'語 ／ 覚えた '+known+'語 ／ マスター '+cards.length+'語（マスターは削除されません）';
+  $('markLearned').disabled=!order.length;
+  $('prev').disabled=!order.length||pos===0;
+  $('next').disabled=!order.length;
+  $('autoplay').disabled=!order.length;
+  $('speak').disabled=!order.length;
+  $('speakExample').disabled=!order.length;
+ }
+ render=function(){
+  rebuild();
+  if(order.length){baseRender();$('counter').textContent=(pos+1)+' / '+order.length;}
+  else{
+   $('front').textContent='すべて覚えました！';
+   $('front').hidden=false;$('synonymsVisible').textContent='';
+   $('back').hidden=true;$('exampleVisible').hidden=true;$('exampleJapanese').hidden=true;
+   $('counter').textContent='0 / 0';$('progress').style.width='100%';
+   $('total').textContent=cards.length+'語';
+  }
+  stats();
+ };
+ $('markLearned').onclick=()=>{
+  if(!order.length)return;
+  const word=cards[order[pos]].w;
+  if(!confirm('「'+word+'」を覚えた単語にして、次回から出題しないようにしますか？'))return;
+  stopAuto();
+  learned.add(norm(word));persist();
+  const nextIndex=Math.min(pos,order.length-2);
+  order.splice(pos,1);pos=Math.max(0,nextIndex);flipped=false;
+  render();
+  status('「'+word+'」を出題対象から外しました。');
+ };
+ $('restoreLearned').onclick=()=>{
+  if(!learned.size){alert('覚えた単語はまだありません。');return}
+  if(!confirm('覚えた単語をすべて出題対象に戻しますか？'))return;
+  stopAuto();learned.clear();persist();order=cards.map((_,i)=>i);pos=0;flipped=false;render();
+ };
+ $('shuffle').onclick=()=>{
+  stopAuto();rebuild();
+  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
+  pos=0;flipped=false;render();
+ };
+ $('restart').onclick=()=>{stopAuto();order=cards.map((_,i)=>i);pos=0;flipped=false;render()};
+ // Preserve the learned list even after a Google Sheets sync or list edit.
+ render();
+})();
 </script></body></html>
