@@ -204,10 +204,10 @@ async function editSharedRegistry(modify,message){
   const get=await fetch(endpoint+'?ts='+Date.now(),{headers,cache:'no-store'});
   if(!get.ok)throw Error('GitHubの読み込み失敗（HTTP '+get.status+'）。トークンの権限を確認してください');
   const file=await get.json();
-  const data=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(file.content.replace(/\\s/g,'')),c=>c.charCodeAt(0))));
+  const data=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(file.content.replace(/\s/g,'')),c=>c.charCodeAt(0))));
   if(!Array.isArray(data.decks))throw Error('decks.jsonの形式が正しくありません');
   modify(data.decks);
-  const put=await fetch(endpoint,{method:'PUT',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({message,content:encodeUtf8Base64(JSON.stringify(data,null,2)+'\\n'),sha:file.sha})});
+  const put=await fetch(endpoint,{method:'PUT',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({message,content:encodeUtf8Base64(JSON.stringify(data,null,2)+'\n'),sha:file.sha})});
   if(put.status===409&&attempt===0)continue;
   if(!put.ok)throw Error('GitHubの保存失敗（HTTP '+put.status+'）。権限や登録内容を確認してください');
   return;
