@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>マイ英単語フラッシュカード｜Ver.G4</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>マイ英単語フラッシュカード｜Ver.G5</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;color:#1d3049;background:#f1f5fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:720px;margin:auto;padding:18px 14px 50px}h1{font-size:23px;margin:5px 0}p{line-height:1.55}.muted{color:#61738a;font-size:13px}.panel{background:white;border:1px solid #dde5f0;border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 4px 15px #152b4910}label{display:block;font-weight:650;font-size:14px;margin:12px 0 6px}input,select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:12px;background:white;font-size:16px}button{border:0;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:650;cursor:pointer;background:#e9eef6;color:#173858}button.primary{background:#1765d1;color:white}button.success{background:#13815b;color:white}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.row .small{flex:0 0 auto}.count{font-size:14px;color:#46617d}.flash{height:auto;overflow:visible;background:linear-gradient(150deg,#eaf1ff,#f8faff);border:1px solid #d7e3f5;border-radius:17px;min-height:235px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:23px 15px;margin:14px 0;cursor:pointer}.word{font-size:clamp(78px,19vw,155px);font-weight:900;line-height:1.08;letter-spacing:-.035em;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.syn{color:#5c718e;margin-top:12px}.meaning{font-size:clamp(40px,10vw,80px);font-weight:900;line-height:1.22;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.example{font-size:15px;line-height:1.5;margin-top:12px}.hint{color:#8293a9;font-size:12px;margin-top:15px}.progress{height:7px;background:#e8edf4;border-radius:20px;overflow:hidden;margin-top:10px}.progress>div{height:100%;background:#2681d4;width:0%}.smallnote{font-size:12px;color:#60728b}.listrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #e7edf5}.listrow span{overflow-wrap:anywhere}#status{min-height:20px}details{margin-top:12px}summary{cursor:pointer;font-weight:650}.hidden{display:none!important}
 
-/* Ver.G4: Fullscreen learning mode */
+/* Ver.G5: Fullscreen learning mode */
 .github-version{display:inline-block;margin:6px 0 10px;padding:6px 12px;border-radius:9px;background:#e8f1ff;border:1px solid #bfd4f3;color:#1255ab;font-weight:700;font-size:13px}
 .studyTop{display:flex;align-items:center;justify-content:space-between;gap:9px}
 .studyTop #deckTitle{flex:1;min-width:0}
@@ -22,12 +22,16 @@ body.is-fullscreen #fsPlayback{display:grid;grid-template-columns:1fr 1fr 1fr;ga
 #fsPlaybackStart{background:#1765d1;color:#fff}
 #fsPlaybackStop{background:#e7ecf4;color:#173858}
 #fullExit{background:#e8eef7}
+
+#fsPlaybackStart.is-playing{background:#e58a20;color:white}
+#autoPlay.is-playing{background:#e58a20;color:white}
+.backup-actions{margin-top:12px}
 </style></head><body><main class="wrap">
-<h1>マイ英単語フラッシュカード</h1><div class="github-version">Ver.G4</div><p class="muted intro">単語データはGoogleスプレッドシートから読み込みます。初期登録は0語です。<br><small>シート選択版・5項目の文字サイズ・音声設定対応 2026/10/11</small></p>
+<h1>マイ英単語フラッシュカード</h1><div class="github-version">Ver.G5</div><p class="muted intro">単語データはGoogleスプレッドシートから読み込みます。初期登録は0語です。<br><small>シート選択版・5項目の文字サイズ・音声設定対応 2026/10/11</small></p>
 <section class="panel" id="selectorPanel"><strong>学習リストの切り替え</strong><label for="deck">学習するリスト</label><select id="deck"><option value="">リストを選択してください</option></select><div class="row" style="margin-top:12px"><button class="primary" id="sync">↻ 選択したシートを読み込む</button><button id="editDecks">シートを登録・管理</button></div><p id="syncStatus" class="muted"></p>
 <div id="deckEditor" class="hidden"><label for="deckName">リスト名（例：英検3級）</label><input id="deckName" placeholder="英検3級"><label for="deckUrl">Googleスプレッドシートの公開CSV URL</label><input id="deckUrl" type="url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"><div class="row" style="margin-top:10px"><button class="primary" id="saveDeck">＋ リストを登録</button><button id="removeDeck">選択中のリストを削除</button></div><p class="smallnote">Googleスプレッドシートの「ファイル → 共有 → ウェブに公開」で対象シートをCSV形式で公開したURLを貼り付けてください。公開するシートに個人情報を含めないでください。</p></div>
 </section>
-<section class="panel" id="studyPanel"><div id="fullscreenBar"><strong>学習モード｜Ver.G4</strong><span id="fullCardCounter">0 / 0</span><button id="fullExit" type="button">⤢ 戻す</button></div><div class="studyTop"><strong id="deckTitle">学習するリストを選択</strong><span id="counter" class="count">0 / 0</span><button id="fullEntry" type="button">⛶ 全画面</button></div><div class="progress"><div id="bar"></div></div><p id="stats" class="muted">マスター 0語 ／ 出題対象 0語 ／ 覚えた 0語</p>
+<section class="panel" id="studyPanel"><div id="fullscreenBar"><strong>学習モード｜Ver.G5</strong><span id="fullCardCounter">0 / 0</span><button id="fullExit" type="button">⤢ 戻す</button></div><div class="studyTop"><strong id="deckTitle">学習するリストを選択</strong><span id="counter" class="count">0 / 0</span><button id="fullEntry" type="button">⛶ 全画面</button></div><div class="progress"><div id="bar"></div></div><p id="stats" class="muted">マスター 0語 ／ 出題対象 0語 ／ 覚えた 0語</p>
 <div class="flash" id="card" tabindex="0" role="button"><div id="front" class="word">シートを登録してください</div><div id="syn" class="syn"></div><div id="back" class="hidden"><div id="meaning" class="meaning"></div><div id="example" class="example"></div><div id="exampleJa" class="example muted"></div></div><div class="hint">タップしてカードを裏返す</div></div>
 <div class="row" id="navButtons"><button id="prev">← 前へ</button><button class="primary" id="next">次へ →</button></div><div class="row" id="speakingButtons" style="margin-top:9px"><button id="speak">🔊 単語を発音</button><button id="speakExample">▶ 例文を発音</button></div>
 <div class="row" id="autoButtons" style="margin-top:9px"><button class="primary" id="autoPlay">▶ 連続自動再生</button><button id="shuffle">🔀 シャッフル</button></div>
@@ -41,7 +45,10 @@ body.is-fullscreen #fsPlayback{display:grid;grid-template-columns:1fr 1fr 1fr;ga
 <div class="row"><div><label for="speechRate">🔊 音声のスピード</label><select id="speechRate"><option value="0.7">遅い（0.7倍）</option><option value="0.9" selected>標準（0.9倍）</option><option value="1.2">早い（1.2倍）</option></select></div></div>
 <div class="row"><div><label for="repeats">単語の発音回数</label><select id="repeats"><option>1</option><option selected>3</option><option>5</option></select></div><div><label for="delay">次のカードまでの間隔</label><select id="delay"><option value="0">0秒</option><option value="1" selected>1秒</option><option value="2">2秒</option><option value="3">3秒</option></select></div></div>
 </details>
-<div class="row" id="learnRow" style="margin-top:12px"><button id="learn" class="success">✓ 覚えた（出題から外す）</button></div><details id="knownDetails"><summary>📋 覚えた単語の一覧・個別に戻す</summary><div id="knownList"></div></details><p id="status" class="muted"></p><div id="fsPlayback"><button id="fsPlaybackStart" type="button">▶ 連続再生</button><button id="fsPlaybackLearn" type="button">✓ 覚えた</button><button id="fsPlaybackStop" type="button">■ 停止</button></div>
+<div class="row" id="learnRow" style="margin-top:12px"><button id="learn" class="success">✓ 覚えた（出題から外す）</button></div><details id="knownDetails"><summary>📋 覚えた単語の一覧・個別に戻す</summary><div id="knownList"></div></details>
+<div class="row backup-actions"><button type="button" id="backupKnown">⬇ 覚えた単語をバックアップ</button><button type="button" id="restoreKnown">⬆ バックアップから復元</button></div>
+<input type="file" id="knownBackupFile" accept=".json,application/json" class="hidden">
+<p class="smallnote">バックアップは端末にJSONファイルで保存します。復元時は記録を統合します。</p><p id="status" class="muted"></p><div id="fsPlayback"><button id="fsPlaybackStart" type="button">▶ 連続再生</button><button id="fsPlaybackLearn" type="button">✓ 覚えた</button><button id="fsPlaybackStop" type="button">■ 停止</button></div>
 </section>
 <section class="panel" id="dataPanel"><strong>データの保存について</strong><p class="muted">単語そのものはスプレッドシートで管理します。登録したシートのURL、読み込んだ単語の一時キャッシュ、覚えた単語の記録は、このブラウザ内に保存します。別端末との学習履歴の同期はまだ対応していません。</p><p class="smallnote">以前のフラッシュカードを開いて単語をJSON形式で書き出す場合は、<a href="./legacy-flashcards.html">旧バージョン（バックアップ）</a>をご利用ください。</p></section>
 </main><script>
@@ -52,14 +59,19 @@ function read(k,fallback){try{const v=JSON.parse(localStorage.getItem(prefix+k))
 function store(k,v){try{localStorage.setItem(prefix+k,JSON.stringify(v))}catch{setStatus('このブラウザでは保存できません')}}
 let decks=read('decks',[]), selected=read('selected',''), known=read('known',{}), caches=read('cache',{});
 let words=[],order=[],pos=0,flipped=false,playing=false,token=0;
+let positions=read('positions',{});
 const norm=s=>String(s||'').trim().toLocaleLowerCase();
 function setStatus(s){$('status').textContent=s}
 function deckInfo(){return decks.find(d=>d.id===selected)}
 function wordKey(w){return norm(w)}
 function knownSet(){return new Set(known[selected]||[])}
 function rebuildSelect(){const sel=$('deck');sel.replaceChildren(new Option('リストを選択してください',''));for(const d of decks)sel.add(new Option(d.name,d.id));sel.value=selected}
-function stop(){playing=false;token++;$('autoPlay').textContent='▶ 連続自動再生';if('speechSynthesis'in window)speechSynthesis.cancel()}
-function activate(id){stop();selected=id;store('selected',selected);words=caches[id]||[];order=words.map((_,i)=>i).filter(i=>!knownSet().has(wordKey(words[i].w)));pos=0;flipped=false;rebuildSelect();render()}
+function updatePlayState(){const label=playing?'🔊 再生中':'▶ 連続再生';$('autoPlay').textContent=playing?'🔊 再生中':'▶ 連続自動再生';$('fsPlaybackStart').textContent=label;$('autoPlay').classList.toggle('is-playing',playing);$('fsPlaybackStart').classList.toggle('is-playing',playing)}
+function stop(){playing=false;token++;updatePlayState();if('speechSynthesis'in window)speechSynthesis.cancel()}
+function savePosition(){if(selected&&order.length){positions[selected]=wordKey(words[order[pos]].w);store('positions',positions)}}
+function restorePosition(){const key=positions[selected];if(!key)return;const i=order.findIndex(n=>wordKey(words[n].w)===key);if(i>=0)pos=i}
+
+function activate(id){stop();selected=id;store('selected',selected);words=caches[id]||[];order=words.map((_,i)=>i).filter(i=>!knownSet().has(wordKey(words[i].w)));pos=0;restorePosition();flipped=false;rebuildSelect();render()}
 function renderKnown(){const el=$('knownList');el.replaceChildren();const set=knownSet();const list=words.filter(w=>set.has(wordKey(w.w)));if(!list.length){el.textContent='覚えた単語はありません';return}for(const w of list){const row=document.createElement('div');row.className='listrow';const name=document.createElement('span');name.textContent=w.w;const button=document.createElement('button');button.textContent='↩ 出題に戻す';button.onclick=()=>{stop();known[selected]=(known[selected]||[]).filter(x=>x!==wordKey(w.w));store('known',known);order.push(words.indexOf(w));render();setStatus('「'+w.w+'」を出題対象に戻しました')};row.append(name,button);el.append(row)}}
 const fontControls=[
  ['wordSize','front',48],['synSize','syn',16],['meaningSize','meaning',34],
@@ -90,7 +102,7 @@ function render(){
  $('back').classList.add('hidden');$('front').classList.remove('hidden');$('syn').classList.remove('hidden');
  if(!active){$('front').textContent=d?(words.length?'すべて覚えました！':'このリストには単語がありません'):'シートを登録してください';$('syn').textContent='';}
  else{const w=words[order[pos]];$('front').textContent=w.w;$('syn').textContent=w.s||'';$('meaning').textContent=w.m;$('example').textContent=w.e||'';$('exampleJa').textContent=w.ej||'';if(flipped){$('front').classList.add('hidden');$('syn').classList.add('hidden');$('back').classList.remove('hidden')}}
- $('fullCardCounter').textContent=$('counter').textContent;renderKnown();requestAnimationFrame(fitCardText);
+ $('fullCardCounter').textContent=$('counter').textContent;savePosition();renderKnown();requestAnimationFrame(fitCardText);
 }
 function flip(){if(!order.length)return;flipped=!flipped;render()}
 $('card').onclick=flip;$('card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};
@@ -115,14 +127,14 @@ function speak(t,lang='en-US'){if(!t||!('speechSynthesis'in window))return Promi
 $('speak').onclick=()=>{stop();if(order.length)speak(words[order[pos]].w)};
 $('speakExample').onclick=()=>{stop();if(order.length)speak(words[order[pos]].e)};
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-$('autoPlay').onclick=async()=>{if(playing){stop();return}if(!order.length)return;stop();playing=true;const my=token;$('autoPlay').textContent='■ 停止';while(playing&&my===token&&order.length){const w=words[order[pos]];flipped=false;render();for(let i=0;i<Number($('repeats').value)&&playing&&my===token;i++)await speak(w.w);if(!playing||my!==token)break;if(w.s)await speak(w.s);if(!playing||my!==token)break;flipped=true;render();await speak(w.m,'ja-JP');if(!playing||my!==token)break;if(w.e)await speak(w.e);if(!playing||my!==token)break;if(w.ej)await speak(w.ej,'ja-JP');if(!playing||my!==token)break;await wait(Number($('delay').value)*1000);if(!playing||my!==token)break;if(pos>=order.length-1){stop();setStatus('すべてのカードの再生が完了しました');break}pos++;}if(my===token)stop()};
+$('autoPlay').onclick=async()=>{if(playing){stop();return}if(!order.length)return;stop();playing=true;updatePlayState();const my=token;while(playing&&my===token&&order.length){const w=words[order[pos]];flipped=false;render();for(let i=0;i<Number($('repeats').value)&&playing&&my===token;i++)await speak(w.w);if(!playing||my!==token)break;if(w.s)await speak(w.s);if(!playing||my!==token)break;flipped=true;render();await speak(w.m,'ja-JP');if(!playing||my!==token)break;if(w.e)await speak(w.e);if(!playing||my!==token)break;if(w.ej)await speak(w.ej,'ja-JP');if(!playing||my!==token)break;await wait(Number($('delay').value)*1000);if(!playing||my!==token)break;if(pos>=order.length-1){stop();setStatus('すべてのカードの再生が完了しました');break}pos++;}if(my===token)stop()};
 $('deck').onchange=()=>{activate($('deck').value);if(selected)sync(true)};
 $('editDecks').onclick=()=>$('deckEditor').classList.toggle('hidden');
 $('saveDeck').onclick=()=>{const name=$('deckName').value.trim(),url=$('deckUrl').value.trim();if(!name||!url){alert('リスト名と公開CSV URLを入力してください');return}if(!/^https:\/\/docs\.google\.com\/spreadsheets\//i.test(url)){alert('Googleスプレッドシートの公開CSV URLを入力してください');return}const id='deck_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);decks.push({id,name,url});store('decks',decks);$('deckName').value='';$('deckUrl').value='';activate(id);$('deckEditor').classList.add('hidden');sync(false)};
 $('removeDeck').onclick=()=>{const d=deckInfo();if(!d)return;if(!confirm('「'+d.name+'」を登録リストから削除しますか？（Googleスプレッドシートは削除しません）'))return;stop();decks=decks.filter(x=>x.id!==selected);store('decks',decks);delete caches[selected];delete known[selected];store('cache',caches);store('known',known);activate(decks[0]?.id||'')};
 $('sync').onclick=()=>sync(false);
 function parseCSV(src){const out=[];let row=[],cell='',q=false;src=src.replace(/^\uFEFF/,'');for(let i=0;i<src.length;i++){const c=src[i];if(c==='"'){if(q&&src[i+1]==='"'){cell+='"';i++}else q=!q}else if(c===','&&!q){row.push(cell);cell=''}else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&src[i+1]==='\n')i++;row.push(cell);if(row.some(v=>v.trim()))out.push(row);row=[];cell=''}else cell+=c}row.push(cell);if(row.some(v=>v.trim()))out.push(row);return out}
-async function sync(silent){const d=deckInfo();if(!d){$('syncStatus').textContent='先にリストを登録・選択してください';return}const selectedAtStart=selected;$('syncStatus').textContent='シートを読み込み中…';try{const res=await fetch(d.url,{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);const rows=parseCSV(await res.text());if(rows.length<2)throw Error('単語が見つかりません');const headers=rows[0].map(norm);const idx=(aliases,defaultIndex)=>{const i=headers.findIndex(x=>aliases.includes(x));return i<0?defaultIndex:i};const wi=idx(['英単語','word','english','単語'],0),mi=idx(['日本語意味','meaning','意味'],1),si=idx(['英語同意語','synonyms','類義語','同意語'],2),ei=idx(['英語例文','example','英文'],3),ji=idx(['例文の日本語訳','example japanese','日本語訳'],4);const seen=new Set();const fresh=[];for(const r of rows.slice(1)){const w=(r[wi]||'').trim();if(!w||seen.has(norm(w)))continue;seen.add(norm(w));fresh.push({w,m:(r[mi]||'').trim(),s:(r[si]||'').trim(),e:(r[ei]||'').trim(),ej:(r[ji]||'').trim()})}if(!fresh.length)throw Error('有効な単語がありません');caches[d.id]=fresh;store('cache',caches);if(selectedAtStart===selected){words=fresh;order=words.map((_,i)=>i).filter(i=>!knownSet().has(wordKey(words[i].w)));pos=0;flipped=false;stop();render()}$('syncStatus').textContent=d.name+'：'+fresh.length+'語を読み込みました（シートにある単語だけを表示）。'}catch(e){$('syncStatus').textContent='読み込み失敗：'+e.message+'。公開CSVのURLを確認してください。';if(!silent)alert('シートの読み込みに失敗しました。公開CSV URLを確認してください。')}}
+async function sync(silent){const d=deckInfo();if(!d){$('syncStatus').textContent='先にリストを登録・選択してください';return}const selectedAtStart=selected;$('syncStatus').textContent='シートを読み込み中…';try{const res=await fetch(d.url,{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);const rows=parseCSV(await res.text());if(rows.length<2)throw Error('単語が見つかりません');const headers=rows[0].map(norm);const idx=(aliases,defaultIndex)=>{const i=headers.findIndex(x=>aliases.includes(x));return i<0?defaultIndex:i};const wi=idx(['英単語','word','english','単語'],0),mi=idx(['日本語意味','meaning','意味'],1),si=idx(['英語同意語','synonyms','類義語','同意語'],2),ei=idx(['英語例文','example','英文'],3),ji=idx(['例文の日本語訳','example japanese','日本語訳'],4);const seen=new Set();const fresh=[];for(const r of rows.slice(1)){const w=(r[wi]||'').trim();if(!w||seen.has(norm(w)))continue;seen.add(norm(w));fresh.push({w,m:(r[mi]||'').trim(),s:(r[si]||'').trim(),e:(r[ei]||'').trim(),ej:(r[ji]||'').trim()})}if(!fresh.length)throw Error('有効な単語がありません');caches[d.id]=fresh;store('cache',caches);if(selectedAtStart===selected){words=fresh;order=words.map((_,i)=>i).filter(i=>!knownSet().has(wordKey(words[i].w)));pos=0;restorePosition();flipped=false;stop();render()}$('syncStatus').textContent=d.name+'：'+fresh.length+'語を読み込みました（シートにある単語だけを表示）。'}catch(e){$('syncStatus').textContent='読み込み失敗：'+e.message+'。公開CSVのURLを確認してください。';if(!silent)alert('シートの読み込みに失敗しました。公開CSV URLを確認してください。')}}
 
 function toggleFullscreen(on){
  document.body.classList.toggle('is-fullscreen',on);
@@ -135,5 +147,26 @@ $('fsPlaybackStart').onclick=()=>{if(!playing)$('autoPlay').click()};
 $('fsPlaybackStop').onclick=()=>stop();
 $('fsPlaybackLearn').onclick=()=>{if(!$('learn').disabled)$('learn').click()};
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&document.body.classList.contains('is-fullscreen'))document.body.classList.remove('is-fullscreen')});
+
+$('backupKnown').onclick=()=>{
+ const data={format:'vocabulary-known-backup',version:1,exportedAt:new Date().toISOString(),known};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='vocabulary_learned_backup_'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ setStatus('覚えた単語のバックアップファイルを保存しました');
+};
+$('restoreKnown').onclick=()=>$('knownBackupFile').click();
+$('knownBackupFile').onchange=async(e)=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  const data=JSON.parse(await file.text());
+  if(data.format!=='vocabulary-known-backup'||!data.known||typeof data.known!=='object'||Array.isArray(data.known))throw Error('対応していないバックアップ形式です');
+  for(const [deck,items] of Object.entries(data.known)){
+   if(!Array.isArray(items)||!items.every(x=>typeof x==='string'))throw Error('バックアップ内容に問題があります');
+   known[deck]=[...new Set([...(known[deck]||[]),...items.map(norm)])];
+  }
+  store('known',known);activate(selected);setStatus('覚えた単語の記録を復元しました');
+ }catch(err){setStatus('復元失敗：'+err.message)}
+ e.target.value='';
+};
 rebuildSelect();activate(selected);if(selected)sync(true);
 </script></body></html>
