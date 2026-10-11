@@ -96,12 +96,14 @@ for(const [key,id,defaultSize] of fontControls){
 function fitCardText(){applyFontSizes()}
 applyFontSizes();
 
+
 function highlightTargetExample(target,sentence){
  const el=$('example'),src=String(sentence||''),term=String(target||'').trim();
  el.replaceChildren();
  if(!src||!term){el.textContent=src;return}
- const irregular={bear:['bore','borne'],strike:['struck','stricken'],tear:['tore','torn']};
+ const irregular={bear:['bore','borne'],strike:['struck','stricken'],tear:['tore','torn'],spurn:['spurned'],spur:['spurred'],spurt:['spurted'],topple:['toppled'],stalk:['stalked'],stampede:['stampeded']};
  const tokens=term.split(/\s+/);
+ const escapeRegex=value=>value.replace(/[^a-zA-Z0-9]/g,char=>'\\'+char);
  const patterns=tokens.map((t,i)=>{
   const variants=[t];
   if(i===0){
@@ -110,7 +112,7 @@ function highlightTargetExample(target,sentence){
    if(t.endsWith('y'))variants.push(t.slice(0,-1)+'ies',t.slice(0,-1)+'ied');
    if(irregular[t.toLowerCase()])variants.push(...irregular[t.toLowerCase()]);
   }
-  return '(?:'+variants.sort((a,b)=>b.length-a.length).map(v=>v.replace(/[.*+?^$()|[\]{}\\]/g,'\\function render(){')).join('|')+')';
+  return '(?:'+[...new Set(variants)].sort((a,b)=>b.length-a.length).map(escapeRegex).join('|')+')';
  });
  let re;
  try{re=new RegExp('(?<![A-Za-z])'+patterns.join('\\s+')+'(?![A-Za-z])','gi')}catch(e){el.textContent=src;return}
