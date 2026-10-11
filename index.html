@@ -126,7 +126,31 @@ $('learn').onclick=()=>{
  if(wasPlaying&&order.length){$('autoPlay').click()}
  else if(wasPlaying){setStatus('すべての単語を覚えました。再生終了')}
 };
-function speak(t,lang='en-US'){if(!t||!('speechSynthesis'in window))return Promise.resolve();return new Promise(resolve=>{const u=new SpeechSynthesisUtterance(t);u.lang=lang;u.rate=Number($('speechRate').value);u.onend=resolve;u.onerror=resolve;speechSynthesis.speak(u)})}
+function speak(t,lang='en-US'){
+ if(!t||!('speechSynthesis'in window))return Promise.resolve();
+ return new Promise(resolve=>{
+  const synth=speechSynthesis;
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang=lang;u.rate=Number($('speechRate').value);
+  let settled=false;
+  let timer;
+  const finish=()=>{
+   if(settled)return;
+   settled=true;clearTimeout(timer);
+   u.onend=null;u.onerror=null;
+   resolve();
+  };
+  u.onend=finish;u.onerror=finish;
+  // Some Android browsers never fire onend after an interrupted utterance.
+  // Advance the playlist rather than waiting forever.
+  const maxWait=Math.min(60000,Math.max(8000,t.length*220/u.rate+5000));
+  timer=setTimeout(()=>{if(!settled){try{synth.cancel()}catch(e){}finish()}},maxWait);
+  try{
+   if(synth.paused)synth.resume();
+   synth.speak(u);
+  }catch(e){finish()}
+ });
+}
 $('speak').onclick=()=>{stop();if(order.length)speak(words[order[pos]].w)};
 $('speakExample').onclick=()=>{stop();if(order.length)speak(words[order[pos]].e)};
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
