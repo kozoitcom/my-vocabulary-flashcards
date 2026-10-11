@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>マイ英単語フラッシュカード｜Ver.G11</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>マイ英単語フラッシュカード｜Ver.G12</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;color:#1d3049;background:#f1f5fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:720px;margin:auto;padding:18px 14px 50px}h1{font-size:23px;margin:5px 0}p{line-height:1.55}.muted{color:#61738a;font-size:13px}.panel{background:white;border:1px solid #dde5f0;border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 4px 15px #152b4910}label{display:block;font-weight:650;font-size:14px;margin:12px 0 6px}input,select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:12px;background:white;font-size:16px}button{border:0;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:650;cursor:pointer;background:#e9eef6;color:#173858}button.primary{background:#1765d1;color:white}button.success{background:#13815b;color:white}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.row .small{flex:0 0 auto}.count{font-size:14px;color:#46617d}.flash{height:auto;overflow:visible;background:linear-gradient(150deg,#eaf1ff,#f8faff);border:1px solid #d7e3f5;border-radius:17px;min-height:235px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:23px 15px;margin:14px 0;cursor:pointer}.word{font-size:clamp(78px,19vw,155px);font-weight:900;line-height:1.08;letter-spacing:-.035em;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.syn{color:#5c718e;margin-top:12px}.meaning{font-size:clamp(40px,10vw,80px);font-weight:900;line-height:1.22;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.example{font-size:15px;line-height:1.5;margin-top:12px}.hint{color:#8293a9;font-size:12px;margin-top:15px}.progress{height:7px;background:#e8edf4;border-radius:20px;overflow:hidden;margin-top:10px}.progress>div{height:100%;background:#2681d4;width:0%}.smallnote{font-size:12px;color:#60728b}.listrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #e7edf5}.listrow span{overflow-wrap:anywhere}#status{min-height:20px}details{margin-top:12px}summary{cursor:pointer;font-weight:650}.hidden{display:none!important}
 
-/* Ver.G11: Fullscreen learning mode */
+/* Ver.G12: Fullscreen learning mode */
 .github-version{display:inline-block;margin:6px 0 10px;padding:6px 12px;border-radius:9px;background:#e8f1ff;border:1px solid #bfd4f3;color:#1255ab;font-weight:700;font-size:13px}
 .studyTop{display:flex;align-items:center;justify-content:space-between;gap:9px}
 .studyTop #deckTitle{flex:1;min-width:0}
@@ -28,19 +28,25 @@ body.is-fullscreen #fsPlayback{display:grid;grid-template-columns:1fr 1fr 1fr;ga
 #autoPlay.is-playing{background:#e58a20;color:white}
 .backup-actions{margin-top:12px}
 </style></head><body><main class="wrap">
-<h1>マイ英単語フラッシュカード</h1><div class="github-version">Ver.G11</div><p class="muted intro">単語データはGoogleスプレッドシートから読み込みます。登録リストはGitHubから全端末に共通配信します。<br><small>Google Apps Script共通登録対応 2026/10/12</small></p>
-<section class="panel" id="selectorPanel"><strong>学習リストの切り替え</strong><label for="deck">学習するリスト</label><select id="deck"><option value="">リストを選択してください</option></select><div class="row" style="margin-top:12px"><button class="primary" id="sync">↻ 選択したシートを読み込む</button><button id="editDecks">共通リストを登録・管理</button></div><p id="syncStatus" class="muted"></p>
+<h1>マイ英単語フラッシュカード</h1><div class="github-version">Ver.G12</div><p class="muted intro">単語データはGoogleスプレッドシートから読み込みます。登録リストはGitHubから全端末に共通配信します。<br><small>共通リスト管理を簡単に 2026/10/12</small></p>
+<section class="panel" id="selectorPanel"><strong>学習リストの切り替え</strong><label for="deck">学習するリスト</label><select id="deck"><option value="">リストを選択してください</option></select><div class="row" style="margin-top:12px"><button class="primary" id="sync">↻ 選択したシートを読み込む</button><button id="editDecks">＋ 追加・削除</button></div><p id="syncStatus" class="muted"></p>
 <div id="deckEditor" class="hidden">
-<p class="smallnote">Google Apps Scriptの初回設定後、GitHubトークンなしで全端末共通リストに登録できます。登録・削除には共通編集キーを使用します。</p>
-<label for="gasUrl">GASウェブアプリURL（初回設定）</label><input id="gasUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec">
-<div class="row" style="margin-top:8px"><button id="saveGasUrl">GAS接続先を保存・再読み込み</button></div>
-<label for="editKey">共通編集キー（登録・削除時のみ）</label><input id="editKey" type="password" autocomplete="off" placeholder="GASで設定した編集キー">
-<label for="deckName">リスト名</label><input id="deckName" placeholder="英検3級">
-<label for="deckUrl">公開CSV URL</label><input id="deckUrl" type="url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv">
-<div class="row" style="margin-top:10px"><button class="primary" id="saveDeck">＋ 全端末共通で登録</button><button id="removeDeck">選択中の共通リストを削除</button></div>
-<p id="editStatus" class="smallnote" role="status"></p><p class="smallnote">接続先URLは端末ごとに保存します。全端末で同じGAS URLを使用してください。編集キーは保存しません。</p></div>
+<h3>リスト管理</h3><p class="smallnote">登録済みリストを確認して、不要なものを個別に削除できます。同じCSV URLの重複登録を防ぎます。</p>
+<div id="manageList" style="display:grid;gap:9px;margin:12px 0"></div>
+<hr style="border:0;border-top:1px solid #dbe2eb;margin:18px 0">
+<h3>＋ 新しいリストを追加</h3>
+<label for="deckName">リスト名</label><input id="deckName" placeholder="例：英検3級">
+<label for="deckUrl">公開CSV URL</label><input id="deckUrl" type="url" placeholder="Googleスプレッドシートの公開CSV URL">
+<label for="editKey">共通編集キー（追加・削除時のみ）</label><input id="editKey" type="password" autocomplete="off" placeholder="GASで設定した編集キー">
+<div class="row" style="margin-top:10px"><button class="primary" id="saveDeck">＋ 共通リストに追加</button></div>
+<p id="editStatus" class="smallnote" role="status"></p>
+<details style="margin-top:18px"><summary style="cursor:pointer;font-weight:700">⚙ 初回設定・GAS接続先（通常は変更不要）</summary>
+<label for="gasUrl">GASウェブアプリURL</label><input id="gasUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec">
+<div class="row" style="margin-top:8px"><button id="saveGasUrl">接続先を保存・再読み込み</button></div>
+<p class="smallnote">全端末で同じGAS URLを設定してください。編集キーは保存されません。</p></details>
+</div>
 </section>
-<section class="panel" id="studyPanel"><div id="fullscreenBar"><strong>学習モード｜Ver.G11</strong><span id="fullCardCounter">0 / 0</span><button id="fullExit" type="button">⤢ 戻す</button></div><div class="studyTop"><strong id="deckTitle">学習するリストを選択</strong><span id="counter" class="count">0 / 0</span><button id="fullEntry" type="button">⛶ 全画面</button></div><div class="progress"><div id="bar"></div></div><p id="stats" class="muted">マスター 0語 ／ 出題対象 0語 ／ 覚えた 0語</p>
+<section class="panel" id="studyPanel"><div id="fullscreenBar"><strong>学習モード｜Ver.G12</strong><span id="fullCardCounter">0 / 0</span><button id="fullExit" type="button">⤢ 戻す</button></div><div class="studyTop"><strong id="deckTitle">学習するリストを選択</strong><span id="counter" class="count">0 / 0</span><button id="fullEntry" type="button">⛶ 全画面</button></div><div class="progress"><div id="bar"></div></div><p id="stats" class="muted">マスター 0語 ／ 出題対象 0語 ／ 覚えた 0語</p>
 <div class="flash" id="card" tabindex="0" role="button"><div id="front" class="word">シートを登録してください</div><div id="syn" class="syn"></div><div id="back" class="hidden"><div id="meaning" class="meaning"></div><div id="example" class="example"></div><div id="exampleJa" class="example muted"></div></div><div class="hint">タップしてカードを裏返す</div></div>
 <div class="row" id="navButtons"><button id="prev">← 前へ</button><button class="primary" id="next">次へ →</button></div><div class="row" id="speakingButtons" style="margin-top:9px"><button id="speak">🔊 単語を発音</button><button id="speakExample">▶ 例文を発音</button></div>
 <div class="row" id="autoButtons" style="margin-top:9px"><button class="primary" id="autoPlay">▶ 連続自動再生</button><button id="shuffle">🔀 シャッフル</button></div>
@@ -113,7 +119,31 @@ async function loadSharedDecks(){
   if(!gasEndpoint()){decks=[...localDecks];activate(decks.some(d=>d.id===selected)?selected:(decks[0]?.id||''))}
  }
 }
-function rebuildSelect(){const sel=$('deck');sel.replaceChildren(new Option('リストを選択してください',''));for(const d of decks)sel.add(new Option(d.name,d.id));sel.value=selected}
+function normalizeCsvUrl(url){try{const u=new URL(url);u.hash='';const gid=u.searchParams.get('gid')||'';const m=u.pathname.match(/\/spreadsheets\/d\/(?:e\/)?([^/]+)/);return m?m[1]+'|'+gid:u.href}catch{return url.trim()}}
+function renderManageList(){
+ const root=$('manageList');if(!root)return;root.replaceChildren();
+ if(!decks.length){root.textContent='登録済みリストはありません';return}
+ const groups=new Map();
+ for(const d of decks){const key=normalizeCsvUrl(d.url);groups.set(key,(groups.get(key)||0)+1)}
+ for(const d of decks){
+  const line=document.createElement('div');line.style.cssText='border:1px solid #dbe2eb;border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap';
+  const info=document.createElement('div');info.style.cssText='flex:1;min-width:130px;overflow-wrap:anywhere';
+  const label=document.createElement('strong');label.textContent=d.name;info.appendChild(label);
+  const meta=document.createElement('div');meta.className='smallnote';meta.textContent=(sharedDecks.some(x=>x.id===d.id)?'全端末共通':'この端末のみ')+(groups.get(normalizeCsvUrl(d.url))>1?' ／ 重複候補':'');info.appendChild(meta);
+  const del=document.createElement('button');del.type='button';del.textContent='削除';del.style.cssText='color:#a52727;border:1px solid #e5baba';
+  del.onclick=async()=>{
+   if(!confirm('「'+d.name+'」を登録リストから削除しますか？（元のGoogleシートは削除されません）'))return;
+   del.disabled=true;
+   try{
+    if(sharedDecks.some(x=>x.id===d.id)){await gasWrite({action:'remove',id:d.id});$('editKey').value='';await loadSharedDecks()}
+    else{localDecks=localDecks.filter(x=>x.id!==d.id);store('decks',localDecks);decks=decks.filter(x=>x.id!==d.id);if(selected===d.id)selected=decks[0]?.id||'';activate(selected)}
+    $('editStatus').textContent='「'+d.name+'」を削除しました';renderManageList();
+   }catch(e){$('editStatus').textContent='削除できません：'+e.message;del.disabled=false}
+  };
+  line.append(info,del);root.appendChild(line);
+ }
+}
+function rebuildSelect(){const sel=$('deck');sel.replaceChildren(new Option('リストを選択してください',''));for(const d of decks)sel.add(new Option(d.name,d.id));sel.value=selected;renderManageList()}
 function updatePlayState(){const label=playing?'🔊 再生中':explicitlyStopped?'▶ 再生再開':'▶ 連続再生';$('autoPlay').textContent=playing?'🔊 再生中':explicitlyStopped?'▶ 再生再開':'▶ 連続自動再生';$('fsPlaybackStart').textContent=label;$('fsPlaybackStop').textContent=explicitlyStopped&&!playing?'■ 停止中':'■ 停止';$('fsPlaybackStop').classList.toggle('is-stopped',explicitlyStopped&&!playing);$('autoPlay').classList.toggle('is-playing',playing);$('fsPlaybackStart').classList.toggle('is-playing',playing)}
 function stop(){playing=false;token++;updatePlayState();if('speechSynthesis'in window)speechSynthesis.cancel()}
 function savePosition(){if(selected&&order.length){positions[selected]=wordKey(words[order[pos]].w);store('positions',positions)}}
@@ -225,23 +255,14 @@ async function gasWrite(payload){
 $('saveDeck').onclick=async()=>{
  const name=$('deckName').value.trim(),url=$('deckUrl').value.trim();
  if(!name||!/^https:\/\/docs\.google\.com\/spreadsheets\//i.test(url)){$('editStatus').textContent='名前と公開CSV URLを入力してください';return}
- const button=$('saveDeck');button.disabled=true;
+ if(decks.some(d=>normalizeCsvUrl(d.url)===normalizeCsvUrl(url))){$('editStatus').textContent='このCSVはすでに登録されています。上の一覧から確認してください。';return}\n const button=$('saveDeck');button.disabled=true;
  const id='shared_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
  try{
   await gasWrite({action:'add',id,name,url});
   $('editKey').value='';$('deckName').value='';$('deckUrl').value='';
   await loadSharedDecks();activate(id);await sync(true);
-  $('editStatus').textContent='全端末共通リストに登録しました';
+  $('editStatus').textContent='全端末共通リストに登録しました';renderManageList();
  }catch(err){$('editStatus').textContent='登録失敗：'+err.message}
- finally{button.disabled=false}
-};
-$('removeDeck').onclick=async()=>{
- const d=deckInfo();if(!d)return;
- if(!sharedDecks.some(x=>x.id===d.id)){$('editStatus').textContent='端末専用リストは共通削除できません';return}
- if(!confirm('「'+d.name+'」を全端末共通リストから削除しますか？'))return;
- const button=$('removeDeck');button.disabled=true;
- try{await gasWrite({action:'remove',id:d.id});$('editKey').value='';await loadSharedDecks();$('editStatus').textContent='共通リストから削除しました'}
- catch(err){$('editStatus').textContent='削除失敗：'+err.message}
  finally{button.disabled=false}
 };
 $('sync').onclick=()=>sync(false);
