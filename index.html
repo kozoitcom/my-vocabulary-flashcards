@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>マイ英単語フラッシュカード｜Ver.G13</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>マイ英単語フラッシュカード｜Ver.G14</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;color:#1d3049;background:#f1f5fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:720px;margin:auto;padding:18px 14px 50px}h1{font-size:23px;margin:5px 0}p{line-height:1.55}.muted{color:#61738a;font-size:13px}.panel{background:white;border:1px solid #dde5f0;border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 4px 15px #152b4910}label{display:block;font-weight:650;font-size:14px;margin:12px 0 6px}input,select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:12px;background:white;font-size:16px}button{border:0;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:650;cursor:pointer;background:#e9eef6;color:#173858}button.primary{background:#1765d1;color:white}button.success{background:#13815b;color:white}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.row .small{flex:0 0 auto}.count{font-size:14px;color:#46617d}.flash{height:auto;overflow:visible;background:linear-gradient(150deg,#eaf1ff,#f8faff);border:1px solid #d7e3f5;border-radius:17px;min-height:235px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:23px 15px;margin:14px 0;cursor:pointer}.word{font-size:clamp(78px,19vw,155px);font-weight:900;line-height:1.08;letter-spacing:-.035em;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.syn{color:#5c718e;margin-top:12px}.meaning{font-size:clamp(40px,10vw,80px);font-weight:900;line-height:1.22;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.example{font-size:15px;line-height:1.5;margin-top:12px}.hint{color:#8293a9;font-size:12px;margin-top:15px}.progress{height:7px;background:#e8edf4;border-radius:20px;overflow:hidden;margin-top:10px}.progress>div{height:100%;background:#2681d4;width:0%}.smallnote{font-size:12px;color:#60728b}.listrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #e7edf5}.listrow span{overflow-wrap:anywhere}#status{min-height:20px}details{margin-top:12px}summary{cursor:pointer;font-weight:650}.hidden{display:none!important}
 
-/* Ver.G13: Fullscreen learning mode */
+/* Ver.G14: Fullscreen learning mode */
 .github-version{display:inline-block;margin:6px 0 10px;padding:6px 12px;border-radius:9px;background:#e8f1ff;border:1px solid #bfd4f3;color:#1255ab;font-weight:700;font-size:13px}
 .studyTop{display:flex;align-items:center;justify-content:space-between;gap:9px}
 .studyTop #deckTitle{flex:1;min-width:0}
@@ -28,7 +28,7 @@ body.is-fullscreen #fsPlayback{display:grid;grid-template-columns:1fr 1fr 1fr;ga
 #autoPlay.is-playing{background:#e58a20;color:white}
 .backup-actions{margin-top:12px}
 </style></head><body><main class="wrap">
-<h1>マイ英単語フラッシュカード</h1><div class="github-version">Ver.G13</div><p class="muted intro">単語データはGoogleスプレッドシートから読み込みます。登録リストはGitHubから全端末に共通配信します。<br><small>登録画面をHTML標準の開閉方式に変更 2026/10/12</small></p>
+<h1>マイ英単語フラッシュカード</h1><div class="github-version">Ver.G14</div><p class="muted intro">単語データはGoogleスプレッドシートから読み込みます。登録リストはGitHubから全端末に共通配信します。<br><small>JavaScript構文エラー修正 2026/10/12</small></p>
 <section class="panel" id="selectorPanel"><strong>学習リストの切り替え</strong><label for="deck">学習するリスト</label><select id="deck"><option value="">リストを選択してください</option></select><div class="row" style="margin-top:12px"><button class="primary" id="sync">↻ 選択したシートを読み込む</button><a id="editDecks" href="#deckEditor" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 14px;border-radius:10px;background:#e9eef6;color:#173858;font-size:14px;font-weight:700;text-decoration:none">＋ 追加・削除 ↓</a></div><p id="syncStatus" class="muted"></p>
 <details id="deckEditor" style="margin-top:16px;border-top:1px solid #dbe2eb;padding-top:12px"><summary style="font-size:16px;color:#1765d1">登録済みリストの確認・新規登録はこちら（タップして開く）</summary>
 <h3>リスト管理</h3><p class="smallnote">登録済みリストを確認して、不要なものを個別に削除できます。同じCSV URLの重複登録を防ぎます。</p>
@@ -46,7 +46,7 @@ body.is-fullscreen #fsPlayback{display:grid;grid-template-columns:1fr 1fr 1fr;ga
 <p class="smallnote">全端末で同じGAS URLを設定してください。編集キーは保存されません。</p></details>
 </details>
 </section>
-<section class="panel" id="studyPanel"><div id="fullscreenBar"><strong>学習モード｜Ver.G13</strong><span id="fullCardCounter">0 / 0</span><button id="fullExit" type="button">⤢ 戻す</button></div><div class="studyTop"><strong id="deckTitle">学習するリストを選択</strong><span id="counter" class="count">0 / 0</span><button id="fullEntry" type="button">⛶ 全画面</button></div><div class="progress"><div id="bar"></div></div><p id="stats" class="muted">マスター 0語 ／ 出題対象 0語 ／ 覚えた 0語</p>
+<section class="panel" id="studyPanel"><div id="fullscreenBar"><strong>学習モード｜Ver.G14</strong><span id="fullCardCounter">0 / 0</span><button id="fullExit" type="button">⤢ 戻す</button></div><div class="studyTop"><strong id="deckTitle">学習するリストを選択</strong><span id="counter" class="count">0 / 0</span><button id="fullEntry" type="button">⛶ 全画面</button></div><div class="progress"><div id="bar"></div></div><p id="stats" class="muted">マスター 0語 ／ 出題対象 0語 ／ 覚えた 0語</p>
 <div class="flash" id="card" tabindex="0" role="button"><div id="front" class="word">シートを登録してください</div><div id="syn" class="syn"></div><div id="back" class="hidden"><div id="meaning" class="meaning"></div><div id="example" class="example"></div><div id="exampleJa" class="example muted"></div></div><div class="hint">タップしてカードを裏返す</div></div>
 <div class="row" id="navButtons"><button id="prev">← 前へ</button><button class="primary" id="next">次へ →</button></div><div class="row" id="speakingButtons" style="margin-top:9px"><button id="speak">🔊 単語を発音</button><button id="speakExample">▶ 例文を発音</button></div>
 <div class="row" id="autoButtons" style="margin-top:9px"><button class="primary" id="autoPlay">▶ 連続自動再生</button><button id="shuffle">🔀 シャッフル</button></div>
@@ -255,7 +255,8 @@ async function gasWrite(payload){
 $('saveDeck').onclick=async()=>{
  const name=$('deckName').value.trim(),url=$('deckUrl').value.trim();
  if(!name||!/^https:\/\/docs\.google\.com\/spreadsheets\//i.test(url)){$('editStatus').textContent='名前と公開CSV URLを入力してください';return}
- if(decks.some(d=>normalizeCsvUrl(d.url)===normalizeCsvUrl(url))){$('editStatus').textContent='このCSVはすでに登録されています。上の一覧から確認してください。';return}\n const button=$('saveDeck');button.disabled=true;
+ if(decks.some(d=>normalizeCsvUrl(d.url)===normalizeCsvUrl(url))){$('editStatus').textContent='このCSVはすでに登録されています。上の一覧から確認してください。';return}
+ const button=$('saveDeck');button.disabled=true;
  const id='shared_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
  try{
   await gasWrite({action:'add',id,name,url});
