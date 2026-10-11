@@ -1,5 +1,13 @@
 # 更新履歴（マイ英単語フラッシュカード）
 
+## Ver.G11 — 2026-10-12
+- GitHubトークンによる編集UIを廃止。GAS + Googleスプレッドシートの共通登録リストに対応。
+- GASの /exec URLを各端末に初回登録し、共通編集キーで登録・削除。キーは保存しない。
+- GAS接続前は旧 decks.json を読み込み（閲覧のみ）。GAS接続後はGASの登録リストを参照。
+- GASサーバーコード: gas/Code.gs。Google側のスクリプト作成・シートID/編集キー設定・ウェブアプリ公開は利用者の初回作業が必要。
+- 更新前のG10は backups/index-Ver.G10-before-G11-20261012.html にバックアップ。
+- GAS未デプロイのためエンドツーエンド動作未検証。旧decks.json登録リストのGAS移行は未実施。
+
 ## Ver.G10 — 2026-10-12
 - PC・スマートフォンのアプリ画面から、GoogleシートをGitHubの共通 `decks.json` に登録・削除する機能を追加。
 - 書き込みには利用者自身のGitHub Fine-grained Personal Access Token（対象リポジトリの Contents: Read and write）が必要。トークンは保存せず、操作後に入力欄を消去。
