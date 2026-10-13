@@ -86,11 +86,20 @@ function cloudWatchProgress(){
   if(selected!==watched)return;
   const data=doc.exists?doc.data():{};
   const incoming=Array.isArray(data.known)?data.known.filter(x=>typeof x==='string'):[];
-  const old=JSON.stringify(known[watched]||[]);
+  // Ignore local write echoes: otherwise every speech-card render causes a
+  // Firestore snapshot, another render and another write (flicker/rewind).
+  if(doc.metadata.hasPendingWrites)return;
+  const knownChanged=JSON.stringify(known[watched]||[])!==JSON.stringify(incoming);
+  const remotePosition=typeof data.position==='string'?data.position:null;
+  const currentPosition=order.length?wordKey(words[order[pos]]?.w):null;
+  const positionChanged=remotePosition!==null&&remotePosition!==currentPosition;
+  if(!knownChanged&&!positionChanged)return;
   known[watched]=incoming;
-  if(typeof data.position==='string')positions[watched]=data.position;
-  if(old!==JSON.stringify(incoming)){stop();order=words.map((_,i)=>i).filter(i=>!knownSet().has(wordKey(words[i].w)))}
-  pos=0;restorePosition();render();
+  if(remotePosition!==null)positions[watched]=remotePosition;
+  if(knownChanged){
+   stop();order=words.map((_,i)=>i).filter(i=>!knownSet().has(wordKey(words[i].w)));
+  }
+  if(positionChanged||knownChanged){pos=0;restorePosition();render(false)}
  },e=>cloudStatus('学習同期エラー：'+e.message));
 }
 async function cloudStart(user){
@@ -165,7 +174,7 @@ function render(){
  $('back').classList.add('hidden');$('front').classList.remove('hidden');$('syn').classList.remove('hidden');
  if(!active){$('front').textContent=d?(words.length?'すべて覚えました！':'このリストには単語がありません'):'シートを登録してください';$('syn').textContent='';}
  else{const w=words[order[pos]];$('front').textContent=w.w;$('syn').textContent=w.s||'';$('meaning').textContent=w.m;$('example').textContent=w.e||'';$('exampleJa').textContent=w.ej||'';if(flipped){$('front').classList.add('hidden');$('syn').classList.add('hidden');$('back').classList.remove('hidden')}}
- $('fullCardCounter').textContent=$('counter').textContent;savePosition();renderKnown();requestAnimationFrame(fitCardText);
+ $('fullCardCounter').textContent=$('counter').textContent;if(persist)savePosition();renderKnown();requestAnimationFrame(fitCardText);
 }
 function flip(){if(!order.length)return;flipped=!flipped;render()}
 $('card').onclick=flip;$('card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};
