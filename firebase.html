@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>マイ英単語フラッシュカード｜Ver.F12 Firebase試験版</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>マイ英単語フラッシュカード｜Ver.F13 Firebase試験版</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;color:#1d3049;background:#f1f5fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:720px;margin:auto;padding:18px 14px 50px}h1{font-size:23px;margin:5px 0}p{line-height:1.55}.muted{color:#61738a;font-size:13px}.panel{background:white;border:1px solid #dde5f0;border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 4px 15px #152b4910}label{display:block;font-weight:650;font-size:14px;margin:12px 0 6px}input,select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:12px;background:white;font-size:16px}button{border:0;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:650;cursor:pointer;background:#e9eef6;color:#173858}button.primary{background:#1765d1;color:white}button.success{background:#13815b;color:white}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.row .small{flex:0 0 auto}.count{font-size:14px;color:#46617d}.flash{height:auto;overflow:visible;background:linear-gradient(150deg,#eaf1ff,#f8faff);border:1px solid #d7e3f5;border-radius:17px;min-height:235px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:23px 15px;margin:14px 0;cursor:pointer}.word{font-size:clamp(78px,19vw,155px);font-weight:900;line-height:1.08;letter-spacing:-.035em;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.syn{color:#5c718e;margin-top:12px}.meaning{font-size:clamp(40px,10vw,80px);font-weight:900;line-height:1.22;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.example{font-size:15px;line-height:1.5;margin-top:12px}.hint{color:#8293a9;font-size:12px;margin-top:15px}.progress{height:7px;background:#e8edf4;border-radius:20px;overflow:hidden;margin-top:10px}.progress>div{height:100%;background:#2681d4;width:0%}.smallnote{font-size:12px;color:#60728b}.listrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #e7edf5}.listrow span{overflow-wrap:anywhere}#status{min-height:20px}details{margin-top:12px}summary{cursor:pointer;font-weight:650}.hidden{display:none!important}
 
-/* Ver.F12: Fullscreen learning mode */
+/* Ver.F13: Fullscreen learning mode */
 .github-version{display:inline-block;margin:6px 0 10px;padding:6px 12px;border-radius:9px;background:#e8f1ff;border:1px solid #bfd4f3;color:#1255ab;font-weight:700;font-size:13px}
 .studyTop{display:flex;align-items:center;justify-content:space-between;gap:9px}
 .studyTop #deckTitle{flex:1;min-width:0}
@@ -28,11 +28,11 @@ body.is-fullscreen #fsPlayback{display:grid;grid-template-columns:1fr 1fr 1fr;ga
 #autoPlay.is-playing{background:#e58a20;color:white}
 .backup-actions{margin-top:12px}
 </style></head><body><main class="wrap">
-<h1>マイ英単語フラッシュカード</h1><div class="github-version">Ver.F12（Firebase試験版）</div><p class="muted intro">単語データはGoogleスプレッドシートから読み込みます。Firebase版：同じGoogleアカウントでリスト・学習記録・再開位置を同期します。端末専用版はindex.htmlに残しています。<br><small>G9端末専用版（共通化なし）2026/10/12</small></p>
+<h1>マイ英単語フラッシュカード</h1><div class="github-version">Ver.F13（Firebase試験版）</div><p class="muted intro">単語データはGoogleスプレッドシートから読み込みます。Firebase版：同じGoogleアカウントでリスト・学習記録・再開位置を同期します。端末専用版はindex.htmlに残しています。<br><small>G9端末専用版（共通化なし）2026/10/12</small></p>
 <section class="panel" id="firebaseAccount"><strong>Firebase同期（試験版）</strong><p id="cloudStatus" class="muted">Firebaseの接続設定を確認中…</p><div class="row"><button id="signInGoogle" class="primary" type="button">Googleでログイン</button><button id="signOutGoogle" type="button">ログアウト</button></div><p class="smallnote">同じGoogleアカウントでログインしてください。設定が未完了の場合は利用できません。現在の端末専用版は<a href="./index.html">こちら</a>です。</p></section><section class="panel" id="selectorPanel"><strong>学習リストの切り替え</strong><label for="deck">学習するリスト</label><select id="deck"><option value="">リストを選択してください</option></select><div class="row" style="margin-top:12px"><button class="primary" id="sync">↻ 選択したシートを読み込む</button><button id="editDecks">端末専用リストを管理</button></div><p id="syncStatus" class="muted"></p>
 <div id="deckEditor" class="hidden"><label for="deckName">リスト名（例：英検3級）</label><input id="deckName" placeholder="英検3級"><label for="deckUrl">Googleスプレッドシートの公開CSV URL</label><input id="deckUrl" type="url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"><div class="row" style="margin-top:10px"><button class="primary" id="saveDeck">＋ リストを登録</button><button id="removeDeck">選択中のリストを削除</button></div><p class="smallnote">登録は同じGoogleアカウントの全端末に反映されます。Googleスプレッドシートの「ファイル → 共有 → ウェブに公開」で対象シートをCSV形式で公開したURLを貼り付けてください。公開するシートに個人情報を含めないでください。</p></div>
 </section>
-<section class="panel" id="studyPanel"><div id="fullscreenBar"><strong>学習モード｜Ver.F12</strong><span id="fullCardCounter">0 / 0</span><button id="fullExit" type="button">⤢ 戻す</button></div><div class="studyTop"><strong id="deckTitle">学習するリストを選択</strong><span id="counter" class="count">0 / 0</span><button id="fullEntry" type="button">⛶ 全画面</button></div><div class="progress"><div id="bar"></div></div><p id="stats" class="muted">マスター 0語 ／ 出題対象 0語 ／ 覚えた 0語</p>
+<section class="panel" id="studyPanel"><div id="fullscreenBar"><strong>学習モード｜Ver.F13</strong><span id="fullCardCounter">0 / 0</span><button id="fullExit" type="button">⤢ 戻す</button></div><div class="studyTop"><strong id="deckTitle">学習するリストを選択</strong><span id="counter" class="count">0 / 0</span><button id="fullEntry" type="button">⛶ 全画面</button></div><div class="progress"><div id="bar"></div></div><p id="stats" class="muted">マスター 0語 ／ 出題対象 0語 ／ 覚えた 0語</p>
 <div class="flash" id="card" tabindex="0" role="button"><div id="front" class="word">シートを登録してください</div><div id="syn" class="syn"></div><div id="back" class="hidden"><div id="meaning" class="meaning"></div><div id="example" class="example"></div><div id="exampleJa" class="example muted"></div></div><div class="hint">タップしてカードを裏返す</div></div>
 <div class="row" id="navButtons"><button id="prev">← 前へ</button><button class="primary" id="next">次へ →</button></div><div class="row" id="speakingButtons" style="margin-top:9px"><button id="speak">🔊 単語を発音</button><button id="speakExample">▶ 例文を発音</button></div>
 <div class="row" id="autoButtons" style="margin-top:9px"><button class="primary" id="autoPlay">▶ 連続自動再生</button><button id="shuffle">🔀 シャッフル</button></div>
@@ -212,35 +212,43 @@ $('learn').onclick=()=>{
  if(wasPlaying&&order.length){$('autoPlay').click()}
  else if(wasPlaying){setStatus('すべての単語を覚えました。再生終了')}
 };
+// F13: Audio playback is independent of Firestore. Never silently skip a failed utterance.
+let activeUtterance=null;
 function speak(t,lang='en-US'){
- if(!t||!('speechSynthesis'in window))return Promise.resolve();
+ if(!t)return Promise.resolve(true);
+ if(!('speechSynthesis'in window)){setStatus('このブラウザは音声再生に対応していません');return Promise.resolve(false)}
  return new Promise(resolve=>{
-  const synth=speechSynthesis;
-  const u=new SpeechSynthesisUtterance(t);
-  u.lang=lang;u.rate=Number($('speechRate').value);
-  let settled=false;
-  let timer;
-  const finish=()=>{
+  const synth=window.speechSynthesis;
+  const u=new SpeechSynthesisUtterance(String(t));
+  activeUtterance=u;
+  u.lang=lang;u.rate=Math.max(0.6,Math.min(1.5,Number($('speechRate').value)||1));
+  u.volume=1;
+  let settled=false,started=false;
+  const finish=(ok,reason='')=>{
    if(settled)return;
-   settled=true;clearTimeout(timer);
-   u.onend=null;u.onerror=null;
-   resolve();
+   settled=true;clearTimeout(startTimer);clearTimeout(endTimer);
+   u.onstart=u.onend=u.onerror=null;
+   if(activeUtterance===u)activeUtterance=null;
+   if(!ok&&playing){setStatus('音声再生エラー：'+reason+'。再生を停止しました。')}
+   resolve(ok);
   };
-  u.onend=finish;u.onerror=finish;
-  // F12: Avoid premature forced cancellation on Android TTS.
-  // A speech-length estimate is not a reliable audio completion signal.
-  const maxWait=Math.max(45000,Math.min(180000,t.length*650/Math.max(0.5,u.rate)+15000));
-  timer=setTimeout(()=>{if(!settled){setStatus('音声応答が停止したため次の項目へ進みます');finish()}},maxWait);
-  try{
-   if(synth.paused)synth.resume();
-   synth.speak(u);
-  }catch(e){finish()}
+  const startTimer=setTimeout(()=>finish(false,'音声が開始されません（10秒）'),10000);
+  let endTimer=null;
+  u.onstart=()=>{
+   started=true;clearTimeout(startTimer);
+   // A long sentence can legitimately take time; do not cut it off mid-word.
+   endTimer=setTimeout(()=>finish(false,'音声終了の応答がありません'),Math.max(60000,Math.min(180000,u.text.length*900+30000)));
+  };
+  u.onend=()=>finish(true);
+  u.onerror=e=>finish(false,e.error||'不明なエラー');
+  try{if(synth.paused)synth.resume();synth.speak(u)}
+  catch(e){finish(false,e.message)}
  });
 }
 $('speak').onclick=()=>{stop();if(order.length)speak(words[order[pos]].w)};
 $('speakExample').onclick=()=>{stop();if(order.length)speak(words[order[pos]].e)};
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-$('autoPlay').onclick=async()=>{if(playing){stop();return}if(!order.length)return;stop();explicitlyStopped=false;playing=true;updatePlayState();const my=token;while(playing&&my===token&&order.length){const w=words[order[pos]];flipped=false;render();for(let i=0;i<Number($('repeats').value)&&playing&&my===token;i++)await speak(w.w);if(!playing||my!==token)break;if(w.s)await speak(w.s);if(!playing||my!==token)break;flipped=true;render();await speak(w.m,'ja-JP');if(!playing||my!==token)break;if(w.e)await speak(w.e);if(!playing||my!==token)break;if(w.ej)await speak(w.ej,'ja-JP');if(!playing||my!==token)break;await wait(Number($('delay').value)*1000);if(!playing||my!==token)break;if(pos>=order.length-1){pos=0;setStatus('最後の単語まで再生しました。1番目からループ再生します');}else{pos++;}savePosition();}if(my===token)stop()};
+$('autoPlay').onclick=async()=>{if(playing){stop();return}if(!order.length)return;stop();explicitlyStopped=false;playing=true;updatePlayState();const my=token;while(playing&&my===token&&order.length){const w=words[order[pos]];flipped=false;render();let audioOK=true;for(let i=0;i<Number($('repeats').value)&&playing&&my===token;i++){audioOK=await speak(w.w);if(!audioOK)break;await wait(180)}if(!audioOK||!playing||my!==token)break;if(w.s){audioOK=await speak(w.s);await wait(180)}if(!audioOK||!playing||my!==token)break;flipped=true;render();audioOK=await speak(w.m,'ja-JP');if(!audioOK||!playing||my!==token)break;await wait(180);if(w.e){audioOK=await speak(w.e);await wait(180)}if(!audioOK||!playing||my!==token)break;if(w.ej){audioOK=await speak(w.ej,'ja-JP');await wait(180)}if(!audioOK||!playing||my!==token)break;await wait(Number($('delay').value)*1000);if(!playing||my!==token)break;if(pos>=order.length-1){pos=0;setStatus('最後の単語まで再生しました。1番目からループ再生します');}else{pos++;}savePosition();}if(my===token)stop()};
 $('deck').onchange=()=>{activate($('deck').value);if(selected)sync(true)};
 $('editDecks').onclick=()=>$('deckEditor').classList.toggle('hidden');
 $('saveDeck').onclick=async()=>{
