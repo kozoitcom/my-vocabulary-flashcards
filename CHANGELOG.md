@@ -1,3 +1,9 @@
+## Ver.F1 — 2026-10-13
+- 既存のindex.html（Ver.G9端末専用）を変更せず、Firebase試験版firebase.htmlを新規追加。
+- Googleログイン、Firestoreでの共通リスト追加・削除、学習済み単語と再開位置の同期を実装。
+- firebase-config.jsは未設定テンプレート。Firebase Consoleでのプロジェクト作成・認証・Firestoreルール設定が必要。
+- 実際のFirebase接続・端末間同期は未検証。G9の既存データは自動移行しない。
+
 # 更新履歴（マイ英単語フラッシュカード）
 
 ## G9端末専用版への復帰 — 2026-10-12
