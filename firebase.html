@@ -64,7 +64,7 @@ let words=[],order=[],pos=0,flipped=false,playing=false,token=0;
 let positions=read('positions',{});
 let explicitlyStopped=false;
 let cloudDb=null,cloudUser=null,cloudDeckUnsub=null,cloudProgressUnsub=null,cloudReady=false,cloudApplying=false,cloudKnownReady=false;
-let pendingProgressDeck=null;const pendingKnownChanges=[];
+let pendingProgressDeck=null;const pendingKnownChanges=[];const lastLocalSavedPosition={};
 const cloudStatus=t=>{$('cloudStatus').textContent=t};
 function cloudRef(){return cloudDb.collection('users').doc(cloudUser.uid)}
 function progressRef(id){return cloudRef().collection('progress').doc(id)}
@@ -73,7 +73,8 @@ function cloudSavePosition(){
  if(playing){pendingProgressDeck=selected;return}
  if(!requireCloud()||!selected||!order.length)return;
  const w=words[order[pos]]?.w;if(!w)return;
- progressRef(selected).set({position:wordKey(w),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(e=>cloudStatus('位置の保存失敗：'+e.message));
+ lastLocalSavedPosition[selected]=wordKey(w);
+  progressRef(selected).set({position:wordKey(w),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(e=>cloudStatus('位置の保存失敗：'+e.message));
 }
 function cloudChangeKnown(deck,word,add){
  if(playing){pendingKnownChanges.push({deck,word,add});return}
@@ -96,6 +97,8 @@ function cloudWatchProgress(){
   const remotePosition=typeof data.position==='string'?data.position:null;
   const currentPosition=order.length?wordKey(words[order[pos]]?.w):null;
   const positionChanged=remotePosition!==null&&remotePosition!==currentPosition;
+   // Acknowledgements of this device's own position must not rewind playback.
+   if(remotePosition&&remotePosition===lastLocalSavedPosition[watched]&&!knownChanged)return;
   if(!knownChanged&&!positionChanged)return;
   // During continuous playback, remote snapshots must not move the active card.
   if(playing){if(knownChanged)known[watched]=incoming;return;}
@@ -176,7 +179,7 @@ for(const [key,id,defaultSize] of fontControls){
 }
 function fitCardText(){applyFontSizes()}
 applyFontSizes();
-function render(persist=true){
+function render(persist=false){
  const d=deckInfo();$('deckTitle').textContent=d?d.name:'学習するリストを選択';
  const set=knownSet();const learned=words.filter(w=>set.has(wordKey(w.w))).length;
  $('stats').textContent='マスター '+words.length+'語 ／ 出題対象 '+order.length+'語 ／ 覚えた '+learned+'語';
@@ -221,10 +224,10 @@ function speak(t,lang='en-US'){
    u.onend=null;u.onerror=null;
    resolve();
   };
-  u.onend=finish;u.onerror=finish;
+  u.onend=finish;u.onerror=(event)=>{if(event.error&&event.error!=='interrupted'&&event.error!=='canceled')setStatus('音声エラー：'+event.error);finish()};
   // Some Android browsers never fire onend after an interrupted utterance.
   // Advance the playlist rather than waiting forever.
-  const maxWait=Math.min(120000,Math.max(20000,t.length*450/u.rate+12000));
+  const maxWait=Math.min(120000,Math.max(12000,t.length*300/u.rate+8000));
   timer=setTimeout(()=>{if(!settled){finish()}},maxWait);
   try{
    if(synth.paused)synth.resume();
