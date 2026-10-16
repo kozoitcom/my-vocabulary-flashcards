@@ -108,12 +108,18 @@ async function driveConnect(){
   client.requestAccessToken({prompt:'select_account consent'});
  });
  driveAccess=access;driveReady=false;driveFile=null;driveFolder=null;
+ const about=await driveRequest('drive/v3/about?fields=user(emailAddress,permissionId)');
+ const accountId=about.user?.permissionId||about.user?.emailAddress;
+ if(!accountId)throw Error('Googleアカウントを確認できません');
+ const previousAccount=localStorage.getItem(prefix+'driveAccount');
+ if(previousAccount&&previousAccount!==accountId){driveAccess=null;throw Error('前回とは別のGoogleアカウントです。学習記録の混在を防ぐため、このブラウザでは接続できません。別のブラウザプロファイルを利用してください')}
  await driveLocate();
  if(driveFile){
   const existing=await driveRequest('drive/v3/files/'+driveFile+'?alt=media');
   driveMerge(existing);
   driveMsg('既存のGoogleドライブ記録を統合しました。学習を続けられます。');
  }else{driveMsg('ドライブに既存のバックアップはありません。新規保存できます。')}
+ localStorage.setItem(prefix+'driveAccount',accountId);
  driveReady=true;$('driveSaveNow').disabled=false;
  driveChanged=true;driveSchedule();
 }
