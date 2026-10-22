@@ -41,6 +41,25 @@ body.is-fullscreen #fsPlayback{display:grid;grid-template-columns:1fr 1fr 1fr;ga
 
 /* Typography parity with SD61 (same 16px base and 23px page title). */
 html{font-size:16px!important;-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important}body{font-family:system-ui!important;font-size:16px!important;font-weight:400!important;line-height:normal!important}h1{font-family:system-ui!important;font-size:23px!important;font-weight:700!important;line-height:normal!important;letter-spacing:normal!important}#drivePanel>strong,#selectorPanel>strong{font-family:system-ui!important;font-size:16px!important;font-weight:700!important;line-height:normal!important}#drivePanel .smallnote,#selectorPanel .smallnote{font-size:13px!important;line-height:1.55!important}#driveMessage{font-size:16px!important;font-weight:400!important;line-height:1.55!important}#selectorPanel label{font-size:16px!important;font-weight:400!important}#selectorPanel select{font-size:16px!important;font-weight:400!important}#drivePanel button,#selectorPanel button{font-family:system-ui!important;font-size:14px!important;font-weight:650!important;line-height:normal!important}
+
+/* GD9 visual parity: copy SD61's effective page, section, and control metrics. */
+body{font:16px system-ui,sans-serif!important;background:#f1f5fa!important;color:#1d3049!important;max-width:none!important;margin:0!important;padding:0!important}
+.wrap{max-width:720px!important;margin:auto!important;padding:18px 14px 50px!important}
+h1{font:700 23px system-ui,sans-serif!important;margin:5px 0 12px!important;letter-spacing:normal!important}
+.panel{background:#fff!important;border:1px solid #dde5f0!important;border-radius:16px!important;box-shadow:0 4px 15px #152b4910!important;padding:17px!important;margin:14px 0!important}
+#drivePanel>strong,#selectorPanel>strong{font:700 16px system-ui,sans-serif!important;display:inline!important;margin:0!important}
+#drivePanel .smallnote{font:400 13px/1.55 system-ui,sans-serif!important;color:#61738a!important;margin:0!important}
+#drivePanel .row{display:block!important;margin:0!important;padding:0!important;line-height:normal!important}
+#drivePanel .row>button{display:inline-block!important;vertical-align:middle!important;flex:none!important;width:auto!important;min-width:0!important;min-height:0!important;font:650 14px system-ui,sans-serif!important;padding:12px!important;margin:0 4px 0 0!important;border:0!important;border-radius:9px!important;white-space:normal!important}
+#drivePanel #driveLogin{background:#1765d1!important;color:#fff!important}
+#drivePanel #driveSaveNow{background:#e9eef6!important;color:#173858!important;opacity:.5!important}
+#drivePanel #driveMessage{font:400 16px/normal system-ui,sans-serif!important;color:#1d3049!important;margin:16px 0!important}
+#selectorPanel>strong{display:block!important;margin-bottom:5px!important}
+#selectorPanel label{font:650 14px system-ui,sans-serif!important;display:block!important;margin:12px 0 6px!important}
+#selectorPanel #deck{display:block!important;appearance:auto!important;-webkit-appearance:menulist!important;width:100%!important;min-height:49px!important;border:1px solid #cbd5e1!important;border-radius:10px!important;padding:12px!important;background:#fff!important;color:#1d3049!important;font:400 16px/1.5 system-ui,sans-serif!important;box-shadow:none!important}
+#selectorPanel .row{display:flex!important;gap:8px!important;align-items:center!important;flex-wrap:wrap!important;margin-top:12px!important}
+#selectorPanel .row>button{flex:1 1 100px!important;min-height:46px!important;font:650 14px system-ui,sans-serif!important;padding:12px!important;border-radius:9px!important}
+@media(max-width:440px){#drivePanel .row{display:flex!important;flex-wrap:nowrap!important;gap:8px!important}#drivePanel .row>button{margin:0!important;min-width:0!important}#drivePanel #driveLogin{flex:0 1 auto!important}#drivePanel #driveSaveNow{flex:0 0 auto!important}}
 </style></head><body><main class="wrap">
 <h1>My Learning Ver.GD9</h1>
 <section class="panel" id="drivePanel"><strong>☁ Googleドライブ同期</strong><div class="smallnote">学習履歴・設定をMy Learning専用データに保存します。</div><div class="row"><button id="driveLogin" type="button" class="primary">Googleアカウントで接続・復元</button><button id="driveSaveNow" type="button" disabled>今すぐ同期</button></div><p id="driveMessage" class="smallnote" aria-live="polite">未接続。学習記録はこの端末に保持されます。</p></section><section class="panel" id="selectorPanel"><strong>学習リストの切り替え</strong><label for="deck">学習するリスト</label><select id="deck"><option value="">リストを選択してください</option></select><div class="row" style="margin-top:12px"><button class="primary" id="sync">↻ 選択したシートを読み込む</button><button id="editDecks">リストを管理</button></div><p id="syncStatus" class="muted"></p>
