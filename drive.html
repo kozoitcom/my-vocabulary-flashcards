@@ -177,7 +177,7 @@ async function driveConnect(){
  }else{driveMsg('ドライブに既存のバックアップはありません。新規保存できます。')}
  localStorage.setItem(prefix+'driveAccount',accountId);
  driveReady=true;$('driveSaveNow').disabled=false;
- driveChanged=true;driveSchedule();
+ driveChanged=true;driveSchedule();driveLastPull=Date.now();
 }
 async function driveSave(){
  if(initialPositionGuard||!driveReady||!driveAccess||driveBusy||playing){driveChanged=true;return}
@@ -202,6 +202,27 @@ async function driveSave(){
  }catch(e){driveChanged=true;driveMsg('保存失敗：'+e.message+'。端末内の記録は保持しています。')}
  finally{driveBusy=false}
 }
+let drivePullBusy=false,driveLastPull=0;
+async function driveRefresh(force=false){
+ if(!driveReady||!driveAccess||driveBusy||drivePullBusy||playing||initialPositionGuard||document.visibilityState==='hidden')return;
+ if(!force&&Date.now()-driveLastPull<25000)return;
+ drivePullBusy=true;
+ try{
+  // Push unsaved local edits first; never overwrite them with an older remote position.
+  if(driveChanged){await driveSave();if(driveChanged)return}
+  const files=await driveSearch("name = 'vocabulary-data.json' and '"+driveFolder+"' in parents and trashed = false");
+  const file=files[0];if(!file)return;
+  driveFile=file.id;
+  const remote=await driveRequest('drive/v3/files/'+file.id+'?alt=media');
+  driveMerge(remote);
+  driveLastPull=Date.now();
+  driveMsg('Googleドライブから自動更新：'+new Date().toLocaleTimeString());
+ }catch(e){driveMsg('自動更新できません：'+e.message+'。必要ならGoogleドライブに再接続してください')}
+ finally{drivePullBusy=false}
+}
+setInterval(()=>{void driveRefresh()},30000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void driveRefresh(true)});
+window.addEventListener('focus',()=>{void driveRefresh(true)});
 function driveSchedule(){if(initialPositionGuard||!driveReady||!driveAccess)return;clearTimeout(driveTimer);driveTimer=setTimeout(()=>{if(playing){driveChanged=true;return}driveSave()},6000)}
 $('driveLogin').onclick=async()=>{try{driveMsg('Googleドライブに接続しています…');await driveConnect()}catch(e){driveReady=false;$('driveSaveNow').disabled=true;driveMsg('接続・復元失敗：'+e.message+'。端末内データは変更しません。')}};
 $('driveSaveNow').onclick=()=>driveSave();
@@ -214,7 +235,7 @@ function wordKey(w){return norm(w)}
 function knownSet(){return new Set(known[selected]||[])}
 function rebuildSelect(){const sel=$('deck');sel.replaceChildren(new Option('リストを選択してください',''));for(const d of decks)sel.add(new Option(d.name,d.id));sel.value=selected}
 function updatePlayState(){const label=playing?'🔊 再生中':explicitlyStopped?'▶ 再生再開':'▶ 連続再生';$('autoPlay').textContent=playing?'🔊 再生中':explicitlyStopped?'▶ 再生再開':'▶ 連続自動再生';$('fsPlaybackStart').textContent=label;$('fsPlaybackStop').textContent=explicitlyStopped&&!playing?'■ 停止中':'■ 停止';$('fsPlaybackStop').classList.toggle('is-stopped',explicitlyStopped&&!playing);$('shuffle').classList.toggle('is-stopped',explicitlyStopped&&!playing);$('shuffle').textContent=explicitlyStopped&&!playing?'■ 停止中':'■ 停止';$('autoPlay').classList.toggle('is-playing',playing);$('fsPlaybackStart').classList.toggle('is-playing',playing)}
-function stop(){if(!initialPositionGuard)savePosition();playing=false;token++;updatePlayState();if('speechSynthesis'in window)speechSynthesis.cancel()}
+function stop(){if(!initialPositionGuard)savePosition();playing=false;token++;updatePlayState();if('speechSynthesis'in window)speechSynthesis.cancel();if(driveReady&&driveChanged)driveSchedule()}
 function savePosition(){if(initialPositionGuard)return;if(selected&&order.length){const key=wordKey(words[order[pos]].w);if(positions[selected]!==key){positions[selected]=key;positionTimes[selected]=Date.now();store('positions',positions);store('positionTimes',positionTimes)}}}
 function restorePosition(){const key=positions[selected];if(!key)return;const i=order.findIndex(n=>wordKey(words[n].w)===key);if(i>=0)pos=i}
 
