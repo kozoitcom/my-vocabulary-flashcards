@@ -1,0 +1,17 @@
+{
+  "name": "My Learning",
+  "short_name": "My Learning",
+  "start_url": "./my-learning.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f1f5fa",
+  "theme_color": "#1765d1",
+  "icons": [
+    {
+      "src": "./learning-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
