@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>My Learning｜Ver.GD27 Google Drive</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>My Learning｜Ver.GD28 Google Drive</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;color:#1d3049;background:#f1f5fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:720px;margin:auto;padding:18px 14px 50px}h1{font-size:23px;margin:5px 0}p{line-height:1.55}.muted{color:#61738a;font-size:13px}.panel{background:white;border:1px solid #dde5f0;border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 4px 15px #152b4910}label{display:block;font-weight:650;font-size:14px;margin:12px 0 6px}input,select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:12px;background:white;font-size:16px}button{border:0;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:650;cursor:pointer;background:#e9eef6;color:#173858}button.primary{background:#1765d1;color:white}button.success{background:#13815b;color:white}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.row .small{flex:0 0 auto}.count{font-size:14px;color:#46617d}.flash{height:auto;overflow:visible;background:linear-gradient(150deg,#eaf1ff,#f8faff);border:1px solid #d7e3f5;border-radius:17px;min-height:235px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:23px 15px;margin:14px 0;cursor:pointer}.word{font-size:clamp(78px,19vw,155px);font-weight:900;line-height:1.08;letter-spacing:-.035em;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.syn{color:#5c718e;margin-top:12px}.meaning{font-size:clamp(40px,10vw,80px);font-weight:900;line-height:1.22;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.example{font-size:15px;line-height:1.5;margin-top:12px}.hint{color:#8293a9;font-size:12px;margin-top:15px}.progress{height:7px;background:#e8edf4;border-radius:20px;overflow:hidden;margin-top:10px}.progress>div{height:100%;background:#2681d4;width:0%}.smallnote{font-size:12px;color:#60728b}.listrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #e7edf5}.listrow span{overflow-wrap:anywhere}#status{min-height:20px}details{margin-top:12px}summary{cursor:pointer;font-weight:650}.hidden{display:none!important}
 
@@ -86,7 +86,7 @@ body.is-fullscreen #fsPlayback{flex-shrink:0}
 <div class="row" id="learnRow" style="margin-top:12px"><button id="learn" class="success">✓ 覚えた（出題から外す）</button></div><div class="row" id="navButtons" style="margin-top:10px"><button id="prev">← 前へ</button><button class="primary" id="next">次へ →</button></div><div class="row" id="speakingButtons" style="margin-top:9px"><button id="speak">🔊 単語を発音</button><button id="speakExample">▶ 例文を発音</button></div>
 <div class="row" id="autoButtons" style="margin-top:9px"><button class="primary" id="autoPlay">▶ 連続自動再生</button><button id="shuffle">■ 停止</button></div>
 <details id="settingsPanel" class="panel" style="margin:14px 0;padding:14px"><summary>⚙️ 表示・音声の設定</summary>
-<p>設定はシートごとに保存します。</p><div class="row" style="align-items:center;gap:12px;margin:12px 0"><label for="kidsMode" style="font-weight:700">🧒 子供モード（覚えた時に5択テスト）</label><input id="kidsMode" type="checkbox" style="width:24px;height:24px;flex:none"></div><p style="font-size:13px;color:#64748b">ON：5択で正解した場合だけ登録 ／ OFF：従来どおりそのまま登録</p><h4>カードの表示列（A〜N）</h4><div id="vmap"></div><h4>文字サイズ</h4><div id="vsize"></div><h4>読み上げる列（A〜N）</h4><div id="vspeech"></div><button id="vsave" type="button" class="primary">このシートの設定を保存</button><p id="vstatus"></p><div class="hidden">
+<p>設定はシートごとに保存します。</p><div class="row" style="align-items:center;gap:12px;margin:12px 0"><label for="kidsMode" style="font-weight:700">🧒 子供モード（覚えた時に5択テスト）</label><input id="kidsMode" type="checkbox" style="width:24px;height:24px;flex:none"></div><p style="font-size:13px;color:#64748b">ON：5択で正解した場合だけ登録 ／ OFF：従来どおりそのまま登録</p><div style="margin:12px 0"><label for="learnTestLanguage">確認テストの選択肢</label><select id="learnTestLanguage" style="width:100%"><option value="ja">日本語の意味（5択）</option><option value="en">英語の意味・類義語（5択）</option></select></div><h4>カードの表示列（A〜N）</h4><div id="vmap"></div><h4>文字サイズ</h4><div id="vsize"></div><h4>読み上げる列（A〜N）</h4><div id="vspeech"></div><button id="vsave" type="button" class="primary">このシートの設定を保存</button><p id="vstatus"></p><div class="hidden">
 <div class="row"><div><label for="wordSize">表面：英単語 <output id="wordSizeValue">48px</output></label><input id="wordSize" type="range" min="24" max="120" step="2" value="48" style="padding:0;accent-color:#1765d1"></div>
 <div><label for="synSize">表面：同意語 <output id="synSizeValue">16px</output></label><input id="synSize" type="range" min="12" max="50" step="2" value="16" style="padding:0;accent-color:#1765d1"></div></div>
 <div class="row"><div><label for="meaningSize">裏面：日本語訳 <output id="meaningSizeValue">34px</output></label><input id="meaningSize" type="range" min="20" max="80" step="2" value="34" style="padding:0;accent-color:#1765d1"></div>
@@ -139,7 +139,7 @@ function reconcileVocabHeaders(id,newHeaders){
  $('syncStatus').textContent='列タイトルの変更を検出し、設定を引き継ぎました。';
 }
 function showVocabSettings(){
- $('kidsMode').checked=read('kidsMode',false);
+ $('kidsMode').checked=read('kidsMode',false);$('learnTestLanguage').value=read('learnTestLanguage','ja');
  for(const id of ['vmap','vsize','vspeech'])$(id).replaceChildren();
  const head=document.createElement('div');head.className='vgrid';head.innerHTML='<b>列</b><b>表面</b><b>裏面</b><b>詳細</b><b>非表示</b>';$('vmap').append(head);
  for(const c of letters){const row=document.createElement('div');row.className='vgrid';const label=document.createElement('b');label.textContent=c+'列';const sub=document.createElement('small');sub.className='vcolTitle';sub.textContent=String(vocabHeaders[selected]?.[letters.indexOf(c)]||'').trim()||'（タイトルなし）';label.append(sub);row.append(label);for(const [value,name] of [['front','表面'],['back','裏面'],['detail','詳細'],['hidden','非表示']]){const lab=document.createElement('label');lab.className='vradio';const radio=document.createElement('input');radio.type='radio';radio.name='v_'+c;radio.value=value;radio.checked=(vm().display[c]||'hidden')===value;radio.setAttribute('aria-label',c+'列 '+name);lab.append(radio);row.append(lab)}$('vmap').append(row);
@@ -337,24 +337,31 @@ function finishLearnTest(w,passed){
 function showLearnTest(){
  if(!order.length)return;
  if(!$('kidsMode').checked){stop();finishLearnTest(words[order[pos]],true);return;}
- stop();const w=words[order[pos]],answer=cell(w,'B')||w.m;
+ stop();const w=words[order[pos]],lang=$('learnTestLanguage').value;
+ const japanese=/[\u3040-\u30ff\u3400-\u9fff]/;
+ const japaneseColumn=letters.slice(1).filter(c=>words.some(x=>japanese.test(cell(x,c)))).sort((a,b)=>{const score=c=>words.filter(x=>japanese.test(cell(x,c))).length+(/日本語|和訳|意味|訳/.test(String(vocabHeaders[selected]?.[letters.indexOf(c)]||''))?words.length:0);return score(b)-score(a)})[0];
+ const englishColumn=letters.slice(1).find(c=>/類義|同義|synonym/i.test(String(vocabHeaders[selected]?.[letters.indexOf(c)]||'')))||'B';
+ const testColumn=lang==='ja'?japaneseColumn:englishColumn;
+ if(!testColumn){setStatus('日本語訳の列が見つかりません。');return;}
+ const answer=cell(w,testColumn);
  const normalize=x=>String(x||'').normalize('NFKC').trim().toLowerCase();
- const pool=[...new Set(words.filter(x=>wordKey(x.w)!==wordKey(w.w)).map(x=>cell(x,'B')||x.m).filter(x=>x&&normalize(x)!==normalize(answer)))];
- if(!answer||pool.length<4){setStatus('5択テストには異なる日本語訳が5件必要です。覚えたには登録していません。');return;}
+ const pool=[...new Set(words.filter(x=>wordKey(x.w)!==wordKey(w.w)).map(x=>cell(x,testColumn)).filter(x=>x&&normalize(x)!==normalize(answer)&&(lang!=='ja'||japanese.test(x))))];
+ if(!answer||pool.length<4){setStatus('選択した言語の異なる意味が5件必要です。覚えたには登録していません。');return;}
  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
  const choices=[answer,...pool.slice(0,4)];
  for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
  const overlay=document.createElement('div');overlay.className='learnTestOverlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');
  const panel=document.createElement('div');panel.className='learnTestPanel';
- const heading=document.createElement('h2');heading.textContent='覚えたか確認テスト（5択）';panel.append(heading);
+ const heading=document.createElement('h2');heading.textContent='覚えたか確認テスト（'+(lang==='ja'?'日本語':'英語')+'・5択）';panel.append(heading);
  const question=document.createElement('div');question.className='learnTestQuestion';question.textContent=w.w;panel.append(question);
- const instruction=document.createElement('p');instruction.textContent='正しい日本語の意味を選んでください。';panel.append(instruction);
+ const instruction=document.createElement('p');instruction.textContent='正しい'+(lang==='ja'?'日本語':'英語')+'の意味を選んでください。';panel.append(instruction);
  const buttons=document.createElement('div');buttons.className='learnTestChoices';panel.append(buttons);
  const close=document.createElement('button');close.textContent='キャンセル（登録しない）';close.onclick=()=>overlay.remove();
  choices.forEach((choice,i)=>{const btn=document.createElement('button');btn.textContent=(i+1)+'. '+choice;btn.onclick=()=>{const passed=normalize(choice)===normalize(answer);overlay.remove();finishLearnTest(w,passed);};buttons.append(btn)});
  panel.append(close);overlay.append(panel);document.body.append(overlay);
 }
 $('kidsMode').onchange=()=>{store('kidsMode',$('kidsMode').checked);setStatus($('kidsMode').checked?'子供モードON：5択テストに正解すると登録します':'子供モードOFF：テストなしで登録します');};
+$('learnTestLanguage').onchange=()=>store('learnTestLanguage',$('learnTestLanguage').value);
 $('learn').onclick=showLearnTest;
 function speak(t,lang='en-US'){
  if(!t||!('speechSynthesis'in window))return Promise.resolve();
