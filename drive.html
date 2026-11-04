@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>My Learning｜Ver.GD28 Google Drive</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#183252"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>My Learning｜Ver.GD29 Google Drive</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;color:#1d3049;background:#f1f5fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:720px;margin:auto;padding:18px 14px 50px}h1{font-size:23px;margin:5px 0}p{line-height:1.55}.muted{color:#61738a;font-size:13px}.panel{background:white;border:1px solid #dde5f0;border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 4px 15px #152b4910}label{display:block;font-weight:650;font-size:14px;margin:12px 0 6px}input,select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:12px;background:white;font-size:16px}button{border:0;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:650;cursor:pointer;background:#e9eef6;color:#173858}button.primary{background:#1765d1;color:white}button.success{background:#13815b;color:white}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.row .small{flex:0 0 auto}.count{font-size:14px;color:#46617d}.flash{height:auto;overflow:visible;background:linear-gradient(150deg,#eaf1ff,#f8faff);border:1px solid #d7e3f5;border-radius:17px;min-height:235px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:23px 15px;margin:14px 0;cursor:pointer}.word{font-size:clamp(78px,19vw,155px);font-weight:900;line-height:1.08;letter-spacing:-.035em;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.syn{color:#5c718e;margin-top:12px}.meaning{font-size:clamp(40px,10vw,80px);font-weight:900;line-height:1.22;overflow-wrap:anywhere;word-break:break-word;width:100%;text-align:center}.example{font-size:15px;line-height:1.5;margin-top:12px}.hint{color:#8293a9;font-size:12px;margin-top:15px}.progress{height:7px;background:#e8edf4;border-radius:20px;overflow:hidden;margin-top:10px}.progress>div{height:100%;background:#2681d4;width:0%}.smallnote{font-size:12px;color:#60728b}.listrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #e7edf5}.listrow span{overflow-wrap:anywhere}#status{min-height:20px}details{margin-top:12px}summary{cursor:pointer;font-weight:650}.hidden{display:none!important}
 
@@ -334,6 +334,14 @@ function finishLearnTest(w,passed){
  else if(order.length>1){pos=(pos+1)%order.length;}
  flipped=false;render();setStatus(passed?'正解！「'+w.w+'」を覚えたに登録しました':'不正解。「'+w.w+'」は出題対象に残しました');
 }
+function showLearnTestError(message){
+ const overlay=document.createElement('div');overlay.className='learnTestOverlay';overlay.setAttribute('role','alertdialog');overlay.setAttribute('aria-modal','true');
+ const panel=document.createElement('div');panel.className='learnTestPanel';
+ const title=document.createElement('h2');title.textContent='確認テストを開始できません';
+ const detail=document.createElement('p');detail.textContent=message;
+ const close=document.createElement('button');close.textContent='閉じる';close.onclick=()=>overlay.remove();
+ panel.append(title,detail,close);overlay.append(panel);document.body.append(overlay);setStatus(message);
+}
 function showLearnTest(){
  if(!order.length)return;
  if(!$('kidsMode').checked){stop();finishLearnTest(words[order[pos]],true);return;}
@@ -342,11 +350,11 @@ function showLearnTest(){
  const japaneseColumn=letters.slice(1).filter(c=>words.some(x=>japanese.test(cell(x,c)))).sort((a,b)=>{const score=c=>words.filter(x=>japanese.test(cell(x,c))).length+(/日本語|和訳|意味|訳/.test(String(vocabHeaders[selected]?.[letters.indexOf(c)]||''))?words.length:0);return score(b)-score(a)})[0];
  const englishColumn=letters.slice(1).find(c=>/類義|同義|synonym/i.test(String(vocabHeaders[selected]?.[letters.indexOf(c)]||'')))||'B';
  const testColumn=lang==='ja'?japaneseColumn:englishColumn;
- if(!testColumn){setStatus('日本語訳の列が見つかりません。');return;}
+ if(!testColumn){showLearnTestError('日本語訳の列が見つかりません。列設定をご確認ください。');return;}
  const answer=cell(w,testColumn);
  const normalize=x=>String(x||'').normalize('NFKC').trim().toLowerCase();
  const pool=[...new Set(words.filter(x=>wordKey(x.w)!==wordKey(w.w)).map(x=>cell(x,testColumn)).filter(x=>x&&normalize(x)!==normalize(answer)&&(lang!=='ja'||japanese.test(x))))];
- if(!answer||pool.length<4){setStatus('選択した言語の異なる意味が5件必要です。覚えたには登録していません。');return;}
+ if(!answer||pool.length<4){showLearnTestError('この単語では'+(lang==='ja'?'日本語':'英語')+'の5択問題を作れません。正解を含む異なる意味が5件必要です。覚えたには登録しません。');return;}
  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
  const choices=[answer,...pool.slice(0,4)];
  for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
