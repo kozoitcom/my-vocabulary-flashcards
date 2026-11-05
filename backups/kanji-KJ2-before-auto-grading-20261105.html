@@ -1,0 +1,136 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>漢字モード KJ2</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f1f5fa;color:#1d3049;font-family:system-ui,"Noto Sans JP",sans-serif}.wrap{max-width:680px;margin:auto;padding:15px}.panel{background:white;border:1px solid #dbe4ef;border-radius:15px;padding:16px;margin:12px 0}h1{font-size:22px}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}button,input,select{font:inherit;padding:11px;border:1px solid #cad5e3;border-radius:9px}button{background:#eaf0f8;color:#173858;font-weight:700}button.primary{background:#1765d1;color:white}button.success{background:#13815b;color:white}button:disabled{opacity:.45}.card{background:#eef4ff;border:1px solid #cbdcf4;border-radius:18px;min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;margin:12px 0}.big{font-size:clamp(48px,12vw,82px);font-weight:800;overflow-wrap:anywhere}.muted{color:#60728b;font-size:13px}.hidden{display:none}.progress{height:7px;background:#dfe8f2;border-radius:9px;overflow:hidden}.progress div{height:100%;background:#1765d1}#strokeSvg{display:block;width:min(100%,330px);margin:10px auto;border:1px solid #dbe4ef;border-radius:10px;background:white}#strokeTabs button{flex:0 0 auto}label{display:block;margin:10px 0 5px;font-weight:650}input{width:100%}
+.card{cursor:pointer}
+.card:focus-visible{outline:3px solid #1765d1;outline-offset:3px}
+#extra{width:100%;line-height:1.65}
+.answerDetail{margin-top:9px;font-size:15px;text-align:left;background:rgba(255,255,255,.85);border:1px solid #dbe4ef;padding:9px 12px;border-radius:9px}
+.answerDetail strong{color:#1765d1;display:block;font-size:12px}
+#flipHint{margin-top:12px}
+#writingPanel{background:#fff;border:1px solid #dbe4ef;border-radius:15px;padding:14px;margin:12px 0}
+.writingTitle{font-size:15px;font-weight:750;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.inkWrap{position:relative;width:min(100%,350px);aspect-ratio:1;margin:12px auto;background:#fff;border:2px solid #b9cbe0;border-radius:8px;overflow:hidden;background-image:linear-gradient(to right,transparent calc(50% - .5px),#d6deeb 50%,transparent calc(50% + .5px)),linear-gradient(to bottom,transparent calc(50% - .5px),#d6deeb 50%,transparent calc(50% + .5px))}
+.inkWrap:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(45deg,transparent calc(50% - .5px),#e8edf4 50%,transparent calc(50% + .5px)),linear-gradient(-45deg,transparent calc(50% - .5px),#e8edf4 50%,transparent calc(50% + .5px))}
+#inkCanvas{position:relative;display:block;width:100%;height:100%;touch-action:none;cursor:crosshair;user-select:none;-webkit-user-select:none}
+#writingPanel .row button{font-size:14px;padding:11px 6px}
+#answerActions{margin:9px 0 12px}
+#writingPanel .muted{text-align:center;margin:8px 0 0}
+@media(max-width:400px){.wrap{padding:9px}.panel{padding:12px}.card{min-height:190px;padding:14px}.inkWrap{width:min(100%,315px)}}
+</style></head><body><main class="wrap"><h1>漢字モード <small class="muted">Ver.KJ2（手書き練習対応）</small></h1>
+<section class="panel"><b>学習リスト</b><label>リスト名</label><input id="name" placeholder="小学3年生の漢字"><label>Googleスプレッドシートの公開CSV URL</label><input id="url" placeholder="https://docs.google.com/spreadsheets/d/..."><div class="row" style="margin-top:10px"><button class="primary" id="save">リストを登録</button><button id="load">最新データ取得</button></div><label>登録済みリスト</label><select id="deck"></select><p class="muted" id="message">A:読み方 B:漢字 C:意味 D:例文 E:関連語 F:学年</p></section>
+<section class="panel"><div class="row"><b id="deckTitle">漢字学習</b><span id="count" style="text-align:right">0 / 0</span></div><div class="progress"><div id="bar" style="width:0%"></div></div><div class="card" id="card" role="button" tabindex="0" aria-label="タップして答えを表示・非表示"><div id="face" class="big">リストを登録してください</div><div id="extra"></div><div id="flipHint" class="muted">タップして答えを見る</div></div>
+<div id="writingPanel" class="hidden">
+  <div class="writingTitle"><span>✍ 漢字を書いてみましょう</span><span class="muted">指・タッチペン対応</span></div>
+  <div class="inkWrap" id="inkWrap"><canvas id="inkCanvas" aria-label="漢字の手書き練習スペース"></canvas></div>
+  <div class="row"><button id="undoInk">↶ 1画戻す</button><button id="clearInk">全消去</button><button id="showAnswer" class="primary">答えを見る</button></div>
+  <p class="muted">読み方を見て書き、答えを確かめましょう。</p>
+</div>
+<div id="answerActions" class="row hidden"><button id="retryInk">↶ もう一度書く</button><button id="frontAgain">表面へ戻る</button></div>
+<div class="row"><button id="prev">← 前へ</button><button id="next" class="primary">次へ →</button></div><div class="row" style="margin-top:9px"><button id="voice">🔊 読み方</button><button id="learn" class="success">✓ 覚えた</button></div><div class="row" style="margin-top:9px"><button id="strokeOpen" class="primary">✍ 書き順を見る</button><button id="resetKnown">覚えた記録をリセット</button></div><p class="muted" id="stats"></p></section>
+<section class="panel hidden" id="strokePanel"><b>書き順アニメーション</b><div id="strokeTabs" class="row" style="margin:12px 0"></div><svg id="strokeSvg" viewBox="0 0 109 109"></svg><p id="strokeStatus" class="muted"></p><div class="row"><button class="primary" id="play">▶ 自動再生</button><button id="pause">Ⅱ 一時停止</button><button id="restart">↺ 最初から</button></div><label>再生速度</label><select id="speed"><option value=".5">0.5倍</option><option value="1" selected>1倍</option><option value="1.5">1.5倍</option><option value="2">2倍</option></select><p class="muted">KanjiVG © Ulrich Apel / CC BY-SA 3.0 · <a href="https://kanjivg.tagaini.net/">データ出典</a></p></section></main>
+<script>
+const $=id=>document.getElementById(id),prefix='my-learning-kanji-kj1-',read=(k,d)=>{try{return JSON.parse(localStorage.getItem(prefix+k))??d}catch{return d}},put=(k,v)=>localStorage.setItem(prefix+k,JSON.stringify(v));
+let decks=read('decks',[]),selected=read('selected',''),cache=read('cache',{}),known=read('known',{}),pos=0,flipped=false;
+const rows=()=>cache[selected]||[],key=r=>r[0]+'|'+r[1],remaining=()=>rows().filter(r=>!(known[selected]||[]).includes(key(r))),current=()=>remaining()[pos];
+function options(){const d=$('deck');d.replaceChildren(new Option('リストを選択',''));decks.forEach(x=>d.add(new Option(x.name,x.id)));d.value=selected;const item=decks.find(x=>x.id===selected);$('name').value=item?.name||'';$('url').value=item?.url||''}
+function render(){
+ const list=remaining();
+ if(pos>=list.length)pos=Math.max(0,list.length-1);
+ const w=current();
+ $('deckTitle').textContent=decks.find(x=>x.id===selected)?.name||'漢字学習';
+ $('count').textContent=list.length?(pos+1)+' / '+list.length:'0 / 0';
+ $('bar').style.width=list.length?(100*(pos+1)/list.length)+'%':'0%';
+ $('face').textContent=w?(flipped?w[1]:w[0]):rows().length?'すべて覚えました':'リストを登録してください';
+ const extra=$('extra');extra.replaceChildren();
+ if(w&&flipped){
+  [['意味',w[2]],['例文',w[3]],['類義語・関連語',w[4]]].forEach(([label,value])=>{
+   if(!value)return;
+   const detail=document.createElement('div');detail.className='answerDetail';
+   const title=document.createElement('strong');title.textContent=label;
+   const text=document.createElement('span');text.textContent=value;
+   detail.append(title,text);extra.append(detail);
+  });
+ }
+ $('flipHint').textContent=!w?'':flipped?'タップすると手書き画面に戻ります':'タップして答えを見る';
+ $('writingPanel').classList.toggle('hidden',!w||flipped);
+ $('answerActions').classList.toggle('hidden',!w||!flipped);
+ $('stats').textContent='登録 '+rows().length+'件 ／ 覚えた '+(known[selected]||[]).length+'件';
+ ['prev','next','voice','learn','strokeOpen'].forEach(id=>$(id).disabled=!w);
+ $('strokeOpen').disabled=!w||!flipped;
+ $('prev').disabled=!w||pos===0;
+ if(w&&!flipped)requestAnimationFrame(paintInk);
+}
+function closeStroke(){stop();$('strokePanel').classList.add('hidden')}
+function resetInk(){inkStrokes=[];activePointer=null;activeStroke=null;paintInk()}
+function toFront(){flipped=false;closeStroke();render()}
+function toAnswer(){if(!current())return;flipped=true;render()}
+
+function activate(id){selected=id;put('selected',id);pos=0;flipped=false;resetInk();closeStroke();options();render()}
+$('deck').onchange=()=>activate($('deck').value);
+$('save').onclick=()=>{const name=$('name').value.trim(),url=$('url').value.trim();if(!name||!url){$('message').textContent='名前とCSV URLを入力してください';return}const id=selected||'k'+Date.now();const i=decks.findIndex(d=>d.id===id);const d={id,name,url};if(i<0)decks.push(d);else decks[i]=d;put('decks',decks);activate(id);$('message').textContent='登録しました。最新データ取得を押してください'};
+function csv(t){const result=[];let row=[],value='',quoted=false;t=t.replace(/^\uFEFF/,'');for(let i=0;i<t.length;i++){const c=t[i];if(c==='"'){if(quoted&&t[i+1]==='"'){value+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(value);value=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&t[i+1]==='\n')i++;row.push(value);value='';if(row.some(Boolean))result.push(row);row=[]}else value+=c}row.push(value);if(row.some(Boolean))result.push(row);return result}
+$('load').onclick=async()=>{const d=decks.find(x=>x.id===selected);if(!d)return;$('message').textContent='読み込み中…';try{const r=await fetch(d.url,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=csv(await r.text());const headers=data[0].map(x=>x.trim());if(headers[0]!=='読み方'||headers[1]!=='漢字')throw Error('A列は「読み方」、B列は「漢字」にしてください');cache[selected]=data.slice(1).map(r=>Array.from({length:6},(_,i)=>(r[i]||'').trim())).filter(r=>r[0]&&r[1]);put('cache',cache);pos=0;flipped=false;resetInk();closeStroke();render();$('message').textContent=cache[selected].length+'件を読み込みました'}catch(e){$('message').textContent='読み込み失敗：'+e.message}};
+$('card').onclick=()=>{if(!current())return;if(flipped)toFront();else toAnswer()};
+$('card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('card').click()}};
+$('showAnswer').onclick=toAnswer;
+$('frontAgain').onclick=toFront;
+$('retryInk').onclick=()=>{resetInk();toFront()};
+$('undoInk').onclick=()=>{if(!inkStrokes.length)return;inkStrokes.pop();paintInk()};
+$('clearInk').onclick=resetInk;
+$('next').onclick=()=>{pos=Math.min(remaining().length-1,pos+1);flipped=false;resetInk();closeStroke();render()};
+$('prev').onclick=()=>{pos=Math.max(0,pos-1);flipped=false;resetInk();closeStroke();render()};
+$('learn').onclick=()=>{const r=current();if(!r)return;known[selected]||=[];known[selected].push(key(r));put('known',known);flipped=false;resetInk();closeStroke();render()};
+$('resetKnown').onclick=()=>{if(!confirm('このリストの「覚えた」記録をリセットしますか？'))return;known[selected]=[];put('known',known);pos=0;flipped=false;resetInk();closeStroke();render()};
+$('voice').onclick=()=>{const r=current();if(!r||!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(r[0]);u.lang='ja-JP';speechSynthesis.speak(u)};
+let paths=[],lens=[],step=0,part=0,running=false,frame=0,last=0,character='',seq=0;
+function stop(){running=false;cancelAnimationFrame(frame);last=0}
+function draw(){paths.forEach((p,i)=>{const l=lens[i];p.style.strokeDasharray=l+' '+l;p.style.strokeDashoffset=i<step?0:i===step?l*(1-part):l});$('strokeStatus').textContent=character+'：'+Math.min(paths.length,step+(part>0?1:0))+' / '+paths.length+'画'+(running?'（再生中）':'')}
+function tick(t){if(!running)return;if(!last)last=t;part+=Math.min(80,t-last)*Number($('speed').value)/800;last=t;while(part>=1&&step<paths.length){part--;step++}if(step>=paths.length){step=paths.length;part=0;running=false}draw();if(running)frame=requestAnimationFrame(tick)}
+async function selectChar(ch){stop();const id=++seq;character=ch;$('strokeSvg').replaceChildren();$('strokeStatus').textContent=ch+'を読み込み中…';try{const hex=ch.codePointAt(0).toString(16).padStart(5,'0');const r=await fetch('https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/'+hex+'.svg');if(!r.ok)throw Error('データがありません');const xml=new DOMParser().parseFromString(await r.text(),'image/svg+xml');const source=[...xml.querySelectorAll('path')].filter(p=>/-s\d+$/.test(p.id));if(!source.length)throw Error('筆順が見つかりません');if(id!==seq)return;paths=source.map(p=>{const node=document.createElementNS('http://www.w3.org/2000/svg','path');node.setAttribute('d',p.getAttribute('d'));node.setAttribute('fill','none');node.setAttribute('stroke','#13815b');node.setAttribute('stroke-width','3');node.setAttribute('stroke-linecap','round');node.setAttribute('stroke-linejoin','round');$('strokeSvg').append(node);return node});lens=paths.map(p=>p.getTotalLength());step=0;part=0;draw()}catch(e){if(id===seq)$('strokeStatus').textContent=ch+'：'+e.message}}
+$('strokeOpen').onclick=()=>{const r=current();if(!r)return;const chars=[...new Set([...r[1]].filter(c=>/[\u3400-\u9fff]/u.test(c)))];if(!chars.length)return;const panel=$('strokePanel');if(!panel.classList.contains('hidden')){panel.classList.add('hidden');stop();return}panel.classList.remove('hidden');$('strokeTabs').replaceChildren();chars.forEach(ch=>{const b=document.createElement('button');b.textContent=ch;b.onclick=()=>selectChar(ch);$('strokeTabs').append(b)});selectChar(chars[0]);panel.scrollIntoView({behavior:'smooth',block:'nearest'})};
+$('play').onclick=()=>{if(!paths.length)return;if(step>=paths.length){step=0;part=0}stop();running=true;draw();frame=requestAnimationFrame(tick)};
+$('pause').onclick=()=>{stop();draw()};$('restart').onclick=()=>{stop();step=0;part=0;draw()};
+
+const inkCanvas=$('inkCanvas');
+let inkStrokes=[],activeStroke=null,activePointer=null;
+function inkPoint(e){
+ const box=inkCanvas.getBoundingClientRect();
+ return [Math.min(1,Math.max(0,(e.clientX-box.left)/box.width)),Math.min(1,Math.max(0,(e.clientY-box.top)/box.height))];
+}
+function paintInk(){
+ const b=inkCanvas.getBoundingClientRect();
+ if(!b.width||!b.height)return;
+ const scale=Math.min(window.devicePixelRatio||1,3);
+ const width=Math.round(b.width*scale),height=Math.round(b.height*scale);
+ if(inkCanvas.width!==width||inkCanvas.height!==height){inkCanvas.width=width;inkCanvas.height=height}
+ const ctx=inkCanvas.getContext('2d');
+ if(!ctx)return;
+ ctx.setTransform(scale,0,0,scale,0,0);ctx.clearRect(0,0,b.width,b.height);
+ ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=Math.max(5,b.width*.020);
+ ctx.strokeStyle='#233a56';ctx.fillStyle='#233a56';
+ for(const stroke of inkStrokes){
+  if(!stroke.length)continue;
+  if(stroke.length===1){ctx.beginPath();ctx.arc(stroke[0][0]*b.width,stroke[0][1]*b.height,ctx.lineWidth/2,0,Math.PI*2);ctx.fill();continue}
+  ctx.beginPath();ctx.moveTo(stroke[0][0]*b.width,stroke[0][1]*b.height);
+  for(let i=1;i<stroke.length;i++)ctx.lineTo(stroke[i][0]*b.width,stroke[i][1]*b.height);
+  ctx.stroke();
+ }
+}
+inkCanvas.addEventListener('pointerdown',e=>{
+ if(!current()||flipped||activePointer!==null||e.button>0)return;
+ e.preventDefault();activePointer=e.pointerId;activeStroke=[inkPoint(e)];inkStrokes.push(activeStroke);
+ try{inkCanvas.setPointerCapture(e.pointerId)}catch(err){}
+ paintInk();
+});
+inkCanvas.addEventListener('pointermove',e=>{
+ if(e.pointerId!==activePointer||!activeStroke)return;
+ e.preventDefault();activeStroke.push(inkPoint(e));paintInk();
+});
+function inkEnd(e){if(e.pointerId!==activePointer)return;e.preventDefault();activePointer=null;activeStroke=null}
+inkCanvas.addEventListener('pointerup',inkEnd);
+inkCanvas.addEventListener('pointercancel',inkEnd);
+inkCanvas.addEventListener('lostpointercapture',e=>{if(activePointer===e.pointerId){activePointer=null;activeStroke=null}});
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(paintInk).observe(inkCanvas);
+window.addEventListener('resize',paintInk);
+
+options();render();
+</script></body></html>
