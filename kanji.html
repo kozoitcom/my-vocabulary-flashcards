@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>漢字モード KJ2</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>漢字モード KJ3</title><style>
 *{box-sizing:border-box}body{margin:0;background:#f1f5fa;color:#1d3049;font-family:system-ui,"Noto Sans JP",sans-serif}.wrap{max-width:680px;margin:auto;padding:15px}.panel{background:white;border:1px solid #dbe4ef;border-radius:15px;padding:16px;margin:12px 0}h1{font-size:22px}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}button,input,select{font:inherit;padding:11px;border:1px solid #cad5e3;border-radius:9px}button{background:#eaf0f8;color:#173858;font-weight:700}button.primary{background:#1765d1;color:white}button.success{background:#13815b;color:white}button:disabled{opacity:.45}.card{background:#eef4ff;border:1px solid #cbdcf4;border-radius:18px;min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;margin:12px 0}.big{font-size:clamp(48px,12vw,82px);font-weight:800;overflow-wrap:anywhere}.muted{color:#60728b;font-size:13px}.hidden{display:none}.progress{height:7px;background:#dfe8f2;border-radius:9px;overflow:hidden}.progress div{height:100%;background:#1765d1}#strokeSvg{display:block;width:min(100%,330px);margin:10px auto;border:1px solid #dbe4ef;border-radius:10px;background:white}#strokeTabs button{flex:0 0 auto}label{display:block;margin:10px 0 5px;font-weight:650}input{width:100%}
 .card{cursor:pointer}
 .card:focus-visible{outline:3px solid #1765d1;outline-offset:3px}
@@ -15,7 +15,7 @@
 #answerActions{margin:9px 0 12px}
 #writingPanel .muted{text-align:center;margin:8px 0 0}
 @media(max-width:400px){.wrap{padding:9px}.panel{padding:12px}.card{min-height:190px;padding:14px}.inkWrap{width:min(100%,315px)}}
-</style></head><body><main class="wrap"><h1>漢字モード <small class="muted">Ver.KJ2（手書き練習対応）</small></h1>
+</style></head><body><main class="wrap"><h1>漢字モード <small class="muted">Ver.KJ3（手書き自動判定）</small></h1>
 <section class="panel"><b>学習リスト</b><label>リスト名</label><input id="name" placeholder="小学3年生の漢字"><label>Googleスプレッドシートの公開CSV URL</label><input id="url" placeholder="https://docs.google.com/spreadsheets/d/..."><div class="row" style="margin-top:10px"><button class="primary" id="save">リストを登録</button><button id="load">最新データ取得</button></div><label>登録済みリスト</label><select id="deck"></select><p class="muted" id="message">A:読み方 B:漢字 C:意味 D:例文 E:関連語 F:学年</p></section>
 <section class="panel"><div class="row"><b id="deckTitle">漢字学習</b><span id="count" style="text-align:right">0 / 0</span></div><div class="progress"><div id="bar" style="width:0%"></div></div><div class="card" id="card" role="button" tabindex="0" aria-label="タップして答えを表示・非表示"><div id="face" class="big">リストを登録してください</div><div id="extra"></div><div id="flipHint" class="muted">タップして答えを見る</div></div>
 <div id="writingPanel" class="hidden">
@@ -133,4 +133,4 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(paintInk).observe(inkC
 window.addEventListener('resize',paintInk);
 
 options();render();
-</script></body></html>
+</script><script src="kanji-recognition.js?v=KJ3"></script><script src="kanji-recognition-ui.js?v=KJ3"></script></body></html>
